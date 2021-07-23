@@ -61,26 +61,25 @@
 
   <Target Name="iriclib-build" DependsOnTargets="iriclib-build-debug;iriclib-build-release" />
 
-  <Target Name="iriclib-build-debug" Inputs="iriclib.targets;iriclib.cmake" Outputs="$(INSTALL_DIR)\iriclib-$(IRICLIB_VER)\debug\lib\iriclib.lib" DependsOnTargets="iriclib-src;cgnslib-build-debug">
+  <Target Name="iriclib-build-debug" Inputs="iriclib.targets;iriclib.cmake" Outputs="$(INSTALL_DIR)\iriclib-$(IRICLIB_VER)\lib\iriclibd.lib" DependsOnTargets="iriclib-src;hdf5-build-debug;poco-build-debug">
     <RemoveDir Directories="$(BUILD_DIR)\iriclib-$(IRICLIB_VER)\debug" />
-    <RemoveDir Directories="$(INSTALL_DIR)\iriclib-$(IRICLIB_VER)\debug" />
     <Exec Command="ctest -S iriclib.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-iriclib-debug.log" />
   </Target>
 
-  <Target Name="iriclib-build-release" Inputs="iriclib.targets;iriclib.cmake" Outputs="$(INSTALL_DIR)\iriclib-$(IRICLIB_VER)\release\lib\iriclib.lib" DependsOnTargets="iriclib-src;cgnslib-build-release">
+  <Target Name="iriclib-build-release" Inputs="iriclib.targets;iriclib.cmake" Outputs="$(INSTALL_DIR)\iriclib-$(IRICLIB_VER)\lib\iriclib.lib" DependsOnTargets="iriclib-src;hdf5-build-release;poco-build-release">
     <RemoveDir Directories="$(BUILD_DIR)\iriclib-$(IRICLIB_VER)\release" />
-    <RemoveDir Directories="$(INSTALL_DIR)\iriclib-$(IRICLIB_VER)\release" />
     <Exec Command="ctest -S iriclib.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-iriclib-release.log" />
   </Target>
 
   <Target Name="iriclib-src" DependsOnTargets="iriclib-download" Condition="!Exists('$(SRC_DIR)\iriclib-$(IRICLIB_VER)')">
     <Exec Command="7z x $(DOWNLOADS_DIR)\iriclib-$(IRICLIB_VER).zip -o$(SRC_DIR)" />
+    <Exec Command="ren $(SRC_DIR)\iriclib_v4-$(IRICLIB_VER) iriclib-$(IRICLIB_VER)" />
   </Target>
 
   <Target Name="iriclib-download" Condition="!Exists('$(DOWNLOADS_DIR)\iriclib-$(IRICLIB_VER).zip')">
     <MakeDir Directories="$(DOWNLOADS_DIR)" />
     <Message Text="Downloading iriclib-$(IRICLIB_VER).zip" />
-    <Exec Command="$(CURL) https://github.com/i-RIC/iriclib/archive/v$(IRICLIB_VER).zip" WorkingDirectory="$(DOWNLOADS_DIR)" />
+    <Exec Command="$(CURL) https://github.com/i-RIC/iriclib_v4/archive/v$(IRICLIB_VER).zip" WorkingDirectory="$(DOWNLOADS_DIR)" />
     <Move SourceFiles="$(DOWNLOADS_DIR)\v$(IRICLIB_VER).zip" DestinationFiles="$(DOWNLOADS_DIR)\iriclib-$(IRICLIB_VER).zip" />
   </Target>
 
