@@ -26,7 +26,7 @@ set(BUILD_OPTIONS
 ###-DCGNS_ENABLE_FORTRAN:BOOL=ON
 -DCGNS_ENABLE_HDF5:BOOL=ON
 -DCGNS_ENABLE_LFS:BOOL=ON
--DHDF5_DIR:PATH=${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/${CONF_DIR}/cmake/hdf5
+-DHDF5_DIR:PATH=${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/cmake/hdf5
 -DHDF5_NEED_SZIP:BOOL=ON
 -DHDF5_NEED_ZLIB:BOOL=ON
 )
@@ -60,7 +60,7 @@ if ($ENV{BUILD_TOOLS} MATCHES "[Oo][Nn]")
         "${line}\n"
       )
     endforeach()
-    file(TO_NATIVE_PATH "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/${CONF_DIR}/bin" HDF5PATH)
+    file(TO_NATIVE_PATH "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/bin" HDF5PATH)
     file(APPEND
       ${CTEST_SCRIPT_DIRECTORY}/lib/install/cgnslib-${VER}/${CONF_DIR}/bin/cgconfig.bat
       "set PATH=${HDF5PATH};%PATH%\n"
