@@ -51,7 +51,7 @@ before_build:
   - ps: |
       if (Test-Path ".\lib\install" -PathType Container) {
         # force vtk rebuild
-        Remove-Item -Recurse -Force .\lib\install\vtk-*
+        # Remove-Item -Recurse -Force .\lib\install\vtk-*
         # force hdf5 rebuild
         # Remove-Item -Recurse -Force .\lib\install\hdf5-*
         # remove old versions
