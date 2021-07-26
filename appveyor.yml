@@ -22,10 +22,13 @@ init:
   - FOR /F "tokens=3 delims= " %%i in ('echo %APPVEYOR_BUILD_WORKER_IMAGE%') do set YEAR=%%i
   - echo %YEAR%
   - echo "*** Need versions.cmd before repo is cloned ***"
-  - pushd %TEMP%
-  - curl -L -O "https://raw.githubusercontent.com/%APPVEYOR_REPO_NAME%/%APPVEYOR_REPO_COMMIT%/versions.cmd"
-  - call .\versions.cmd
-  - popd
+  - ps: |
+      if (Test-Path "$env:TEMP" -PathType Container) {
+        Push-Location $env:TEMP
+        curl -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1"
+        .\versions.ps1
+        Pop-Location
+      }
   - echo "*** Environment ***"
   - set
   - echo "*** Tool versions ***"
