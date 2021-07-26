@@ -24,7 +24,7 @@ jobs:
         vs-version: '[16.9,17)'
 
     - name: Export version numbers
-      run: Get-Content .\versions.github_env | Out-File -FilePath test.utf8 -Encoding utf8 -Append
+      run: Get-Content .\versions.github_env | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Export version numbers with underscores
       run: |
