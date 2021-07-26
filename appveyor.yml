@@ -136,6 +136,6 @@ artifacts:
   - path: dirExt.prop
 
 cache:
-  - 'lib\intall\vtk-%VTK_VER%              ->   vtk.targets, vtk.cmake'
+  - 'lib\install\vtk-%VTK_VER%              ->   vtk.targets, vtk.cmake'
   - downloads
   - logs
