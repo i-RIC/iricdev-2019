@@ -23,9 +23,9 @@ init:
   - echo %YEAR%
   - echo "*** Need versions.cmd before repo is cloned ***"
   - ps: |
-      if (Test-Path "$env:TEMP" -PathType Container) {
+      if ($true) {
         Push-Location $env:TEMP
-        curl -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1"
+        C:\WINDOWS\system32\curl.exe -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1"
         .\versions.ps1
         Pop-Location
       }
