@@ -21,7 +21,7 @@ init:
   - set BUILD_TOOLS=OFF
   - FOR /F "tokens=3 delims= " %%i in ('echo %APPVEYOR_BUILD_WORKER_IMAGE%') do set YEAR=%%i
   - echo %YEAR%
-  - echo "*** Need versions.cmd before repo is cloned ***"
+  - echo "*** Need versions.ps1 before repo is cloned ***"
   - ps: |
       if ($true) {
         Push-Location $env:TEMP
@@ -103,7 +103,7 @@ build_script:
   - ps: |
       if (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\vtk-$env:VTK_VER\$env:config" -PathType Container))
       {
-        # (~ 60 minutes)
+        # (~ 50 minutes)
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:vtk-build-$env:config iricdev.proj
       }
       elseif ( `
@@ -136,6 +136,23 @@ artifacts:
   - path: dirExt.prop
 
 cache:
-  - 'lib\install\vtk-%VTK_VER%              ->   vtk.targets, vtk.cmake'
+  - 'lib\install\cgnslib-%CGNSLIB_VER%     ->   cgnslib.targets, cgnslib.cmake'
+  - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets'
+  - 'lib\install\gdal-%GDAL_VER%           ->   gdal.targets'
+  - 'lib\install\geos-%GEOS_VER%           ->   geos.targets, geos.cmake'
+  - 'lib\install\hdf5-%HDF5_VER%           ->   hdf5.targets, hdf5.cmake'
+  - 'lib\install\iriclib-%IRICLIB_VER%     ->   iriclib.targets, iriclib.cmake'
+  - 'lib\install\libpng-%LIBPNG_VER%       ->   libpng.targets, libpng.cmake'
+  - 'lib\install\netcdf-c-%NETCDF_VER%     ->   netcdf-c.targets, netcdf-c.cmake'
+  - 'lib\install\openssl-%OPENSSL_VER%     ->   openssl.targets'
+  - 'lib\install\poco-%POCO_VER%           ->   poco.targets, poco.cmake'
+  - 'lib\install\proj-%PROJ_VER%           ->   proj.targets, proj.cmake'
+  - 'lib\install\Qwt-%QWT_VER%             ->   qwt.targets'
+  - 'lib\install\shapelib-%SHAPELIB_VER%   ->   shapelib.targets'
+  - 'lib\install\sqlite-src-3320300        ->   sqlite.targets'
+  - 'lib\install\tiff-%LIBTIFF_VER%        ->   libtiff.targets, libtiff.cmake'
+  - 'lib\install\udunits-%UDUNITS_VER%     ->   udunits.targets, udunits.cmake'
+  - 'lib\install\vtk-%VTK_VER%             ->   vtk.targets, vtk.cmake'
+  - 'lib\install\yaml-cpp-%YAML_CPP_VER%   ->   yaml.targets, yaml.cmake'
   - downloads
   - logs
