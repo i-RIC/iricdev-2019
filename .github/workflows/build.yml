@@ -35,7 +35,6 @@ jobs:
 
     - name: debug
       run: |
-        Write-Output "DELETE"
         Write-Output "GENERATOR=$env:GENERATOR"
         Write-Output "SGEN=$env:SGEN"
         Get-Command msbuild
