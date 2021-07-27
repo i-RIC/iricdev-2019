@@ -35,12 +35,69 @@ jobs:
 
     - name: debug
       run: |
+        Write-Output "DELETE"
         Write-Output "GENERATOR=$env:GENERATOR"
         Write-Output "SGEN=$env:SGEN"
         Get-Command msbuild
         msbuild -version
         Get-Command cmake
         cmake --version
+
+    - name: Cache boost
+      id: cache-boost
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/boost-${{env.BOOST_VER}}
+        key: ${{runner.os}}-boost-${{hashFiles('./boost.*')}}
+
+    - name: Build boost
+      if: steps.cache-boost.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:boost-src iricdev.proj
+
+    - name: Cache hdf5
+      id: cache-hdf5
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
+        key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+
+    - name: Build hdf5
+      if: steps.cache-hdf5.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
+
+    - name: Cache netcdf-c
+      id: cache-netcdf-c
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
+        key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
+
+    - name: Build netcdf-c
+      if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
+
+    - name: Cache libtiff
+      id: cache-libtiff
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/libtiff-${{env.LIBTIFF_VER}}
+        key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
+
+    - name: Build libtiff
+      if: steps.cache-libtiff.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
 
     - name: Cache poco
       id: cache-poco
@@ -56,3 +113,8 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
 
+    - name: Archive builds
+      uses: actions/upload-artifact@v2
+      with:
+        name: install
+        path: lib/install
