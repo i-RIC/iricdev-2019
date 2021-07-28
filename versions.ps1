@@ -3,6 +3,7 @@
 ##
 
 $env:BOOST_VER="1.73.0"
+$env:CGNSLIB_VER="4.1.1-patch1"
 $env:EXPAT_VER="2.2.6"
 $env:GDAL_VER="3.0.4"
 $env:GEOS_VER="3.4.3"

@@ -113,7 +113,7 @@ build_script:
         (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\openssl-$env:OPENSSL_VER\$env:config" -PathType Container)) )
       {
         # (~ 48 minutes)
-        # iriclib ~ 8 minutes (includes hdf5(~12 min) and poco(~10 min))
+        # iriclib ~ 22 minutes (includes hdf5(~12 min) and poco(~10 min))
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:iriclib-build-$env:config iricdev.proj
         # proj ~ 7 minutes (includes sqlite(~1 min) and libtiff(~1 min))
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:proj-build-$env:config iricdev.proj
