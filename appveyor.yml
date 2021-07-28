@@ -101,6 +101,7 @@ before_build:
 # Since appveyor has time limits (1 hour) we must build in steps
 build_script:
   - ps: |
+      Get-ChildItem $env:APPVEYOR_BUILD_FOLDER\lib\install
       if (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\vtk-$env:VTK_VER\$env:config" -PathType Container))
       {
         # (~ 50 minutes)
@@ -127,6 +128,7 @@ build_script:
         # (~ 33 minutes)
         Write-Output msbuild -noLogo -verbosity:minimal -maxCpuCount -target:appveyor-$env:config iricdev.proj
       }
+      Get-ChildItem lib\install
   - create-files.cmd
 
 artifacts:
