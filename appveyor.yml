@@ -54,6 +54,8 @@ before_build:
   - copy appveyor_programs.prop programs.prop
   - call versions.cmd
   - set BUILD_TOOLS=OFF
+  - curl -L -O https://raw.githubusercontent.com/MestreLion/git-tools/cd87904e0b85d74b1d05f6acbd10553a0ceaceb0/git-restore-mtime
+  - python git-restore-mtime
   - if not exist logs (md logs)
   - if not exist downloads (md downloads)
   - ps: |
@@ -114,25 +116,13 @@ build_script:
       {
         # (~ 48 minutes)
         # iriclib ~ 22 minutes (includes hdf5(~12 min) and poco(~10 min))
-        if (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\iriclib-$env:IRICLIB_VER"             -PathType Container))
-        {
-          msbuild -noLogo -verbosity:minimal -maxCpuCount -target:iriclib-build-$env:config iricdev.proj
-        }
+        msbuild -noLogo -verbosity:minimal -maxCpuCount -target:iriclib-build-$env:config iricdev.proj
         # proj ~ 7 minutes (includes sqlite(~1 min) and libtiff(~1 min))
-        if (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\proj-$env:PROJ_VER\$env:config"       -PathType Container))
-        {
-          msbuild -noLogo -verbosity:minimal -maxCpuCount -target:proj-build-$env:config iricdev.proj
-        }
+        msbuild -noLogo -verbosity:minimal -maxCpuCount -target:proj-build-$env:config iricdev.proj
         # gdal ~ 15 minutes (includes netcdf-c(~1 min) (depends on proj))
-        if (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\gdal-$env:GDAL_VER\$env:config"       -PathType Container))
-        {
-          msbuild -noLogo -verbosity:minimal -maxCpuCount -target:gdal-build-$env:config iricdev.proj
-        }
+        msbuild -noLogo -verbosity:minimal -maxCpuCount -target:gdal-build-$env:config iricdev.proj
         # openssl ~ 3 minutes
-        if (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\openssl-$env:OPENSSL_VER\$env:config" -PathType Container))
-        {
-          msbuild -noLogo -verbosity:minimal -maxCpuCount -target:openssl-build-$env:config iricdev.proj
-        }
+        msbuild -noLogo -verbosity:minimal -maxCpuCount -target:openssl-build-$env:config iricdev.proj
       }
       else
       {
