@@ -70,6 +70,20 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
 
+    - name: Cache sqlite
+      id: cache-sqlite
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/sqlite-src-3320300
+        key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
+
+    - name: Build sqlite
+      if: steps.cache-sqlite.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
+
     - name: Cache netcdf-c
       id: cache-netcdf-c
       uses: actions/cache@v2
@@ -77,7 +91,7 @@ jobs:
         path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
         key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
 
-    - name: Build netcdf-c
+    - name: Build netcdf-c         # depends on hdf5
       if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
       shell: cmd
       run: |
@@ -112,8 +126,164 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
 
-    - name: Archive builds
-      uses: actions/upload-artifact@v2
+    - name: Cache expat
+      id: cache-expat
+      uses: actions/cache@v2
       with:
-        name: install
-        path: lib/install
+        path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
+        key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
+
+    - name: Build expat
+      if: steps.cache-expat.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
+
+    - name: Cache udunits
+      id: cache-udunits
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
+        key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
+
+    - name: Build udunits
+      if: steps.cache-udunits.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
+
+    - name: Cache shapelib
+      id: cache-shapelib
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/shapelib-${{env.UDUNITS_VER}}
+        key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
+
+    - name: Build shapelib
+      if: steps.cache-shapelib.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
+
+    - name: Cache openssl
+      id: cache-openssl
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
+        key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
+
+    - name: Build openssl
+      if: steps.cache-openssl.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:openssl-build iricdev.proj
+
+    - name: Cache geos
+      id: cache-geos
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
+        key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
+
+    - name: Build geos
+      if: steps.cache-geos.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:geos-build iricdev.proj
+
+    - name: Cache libpng
+      id: cache-libpng
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
+        key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
+
+    - name: Build libpng           # depends on hdf5
+      if: steps.cache-libpng.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
+
+    - name: Cache proj
+      id: cache-proj
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
+        key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
+
+    - name: Build proj             # depends on sqlite libtiff
+      if: steps.cache-proj.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
+
+    - name: Cache gdal
+      id: cache-gdal
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
+        key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
+
+    - name: Build gdal             # depends on netcdf-c and proj
+      if: steps.cache-gdal.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:gdal-build iricdev.proj
+
+    - name: Cache iriclib
+      id: cache-iriclib
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
+        key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
+
+    - name: Build iriclib          # depends on hdf5 and poco
+      if: steps.cache-iriclib.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
+
+    - name: Cache vtk
+      id: cache-vtk
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
+        key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+
+    - name: Build vtk
+      if: steps.cache-vtk.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
+
+    - name: Cache yaml
+      id: cache-yaml
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/yaml-${{env.YAML_CPP_VER}}
+        key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
+
+    - name: Build yaml
+      if: steps.cache-yaml.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:yaml-build iricdev.proj
+
+    # Still need to install Qt and build qwt
+
+    # - name: Archive builds
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: install
+    #     path: lib/install
