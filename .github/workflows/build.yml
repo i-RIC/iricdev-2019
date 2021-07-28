@@ -252,19 +252,19 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
 
-    - name: Cache vtk
-      id: cache-vtk
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
-        key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+    # - name: Cache vtk
+    #   id: cache-vtk
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
+    #     key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
 
-    - name: Build vtk
-      if: steps.cache-vtk.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
+    # - name: Build vtk
+    #   if: steps.cache-vtk.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
 
     - name: Cache yaml
       id: cache-yaml
@@ -280,7 +280,7 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:yaml-build iricdev.proj
 
-    # Still need to install Qt and build qwt
+    # Still need to install Qt and build qwt and VTK
 
     # - name: Archive builds
     #   uses: actions/upload-artifact@v2
