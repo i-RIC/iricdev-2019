@@ -278,7 +278,7 @@ jobs:
       shell: cmd
       run: |
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:yaml-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:yaml-cpp-build iricdev.proj
 
     # Still need to install Qt and build qwt and VTK
 
