@@ -24,8 +24,8 @@
     <Move SourceFiles="$(SRC_DIR)\geos-$(GEOS_VER)\tools\astyle\ASLocalizer.cpp" DestinationFiles="$(SRC_DIR)\geos-$(GEOS_VER)\tools\astyle\ASLocalizer.cpp.orig" Condition="'$(GEOS_VER)' == '3.8.1'" />
     <Exec Command="copy /b $(TOP_DIR)\bom.txt+ASLocalizer.cpp.orig ASLocalizer.cpp" WorkingDirectory="$(SRC_DIR)\geos-$(GEOS_VER)\tools\astyle" Condition="'$(GEOS_VER)' == '3.8.1'" />
     <!-- 3.4.3 -->
-    <Copy SourceFiles="$(SRC_DIR)\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp.orig" Condition="'$(GEOS_VER)' == '3.4.3'" />
-    <Copy SourceFiles="patches\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp" Condition="'$(GEOS_VER)' == '3.4.3'" />
+    <Copy SourceFiles="$(SRC_DIR)\geos-3.4.3\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-3.4.3\src\operation\buffer\BufferOp.cpp.orig" Condition="'$(GEOS_VER)' == '3.4.3'" />
+    <Copy SourceFiles="patches\geos-3.4.3\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-3.4.3\src\operation\buffer\BufferOp.cpp" Condition="'$(GEOS_VER)' == '3.4.3'" />
   </Target>
 
   <Target Name="geos-download" Condition="!Exists('$(DOWNLOADS_DIR)\geos-$(GEOS_VER).tar.bz2')">
