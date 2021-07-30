@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <!-- geos doesn't build correctly using ninja (on appveyor) -->
-    <GEOS_GENERATOR>Visual Studio 16 2019</GEOS_GENERATOR>
+    <GEOS_GENERATOR>"Visual Studio 16 2019"</GEOS_GENERATOR>
     <GEOS_SGEN>vs2019-x64</GEOS_SGEN>
   </PropertyGroup>
 
