@@ -25,7 +25,7 @@ init:
   - ps: |
       if ($true) {
         Push-Location $env:TEMP
-        C:\WINDOWS\system32\curl.exe -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1"
+        C:\WINDOWS\system32\curl.exe -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1" 2>&1 | Out-Null
         .\versions.ps1
         Pop-Location
       }
@@ -129,7 +129,9 @@ build_script:
       #   # (~ 33 minutes)
       #   msbuild -noLogo -verbosity:minimal -maxCpuCount -target:appveyor-$env:config iricdev.proj
       # }
-      msbuild -noLogo -verbosity:minimal -maxCpuCount -target:geos-src iricdev.proj
+  - msbuild -noLogo -verbosity:minimal -maxCpuCount -target:geos-src iricdev.proj
+  - dir lib\src\geos-3.4.3\src\operation\buffer\BufferOp.*
+  - msbuild -noLogo -verbosity:minimal -maxCpuCount -target:geos-build-%config% iricdev.proj
   - create-files.cmd
 
 artifacts:
