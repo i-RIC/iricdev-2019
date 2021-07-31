@@ -45,7 +45,7 @@
     <appveyor-release-targets Include="netcdf-c-build-release"/>
     <appveyor-release-targets Include="openssl-build-release"/>
     <appveyor-release-targets Include="poco-build-release"/>
-    <appveyor-release-targets Include="proj-build"/>
+    <appveyor-release-targets Include="proj-build-release"/>
     <appveyor-release-targets Include="qwt-build"/>
     <appveyor-release-targets Include="shapelib-build-release"/>
     <appveyor-release-targets Include="udunits-build-release"/>
@@ -68,6 +68,7 @@
     <appveyor-debug-targets Include="netcdf-c-build-debug"/>
     <appveyor-debug-targets Include="openssl-build-debug"/>
     <appveyor-debug-targets Include="poco-build-debug"/>
+    <appveyor-debug-targets Include="proj-build-debug"/>
     <appveyor-debug-targets Include="shapelib-build-debug"/>
     <appveyor-debug-targets Include="udunits-build-debug"/>
     <appveyor-debug-targets Include="yaml-cpp-build-debug"/>
@@ -190,6 +191,7 @@
     <Message Text="IRICLIB_ADF_SVER=$(IRICLIB_ADF_SVER)" />
     <Message Text="IRICLIB_ADF_VER=$(IRICLIB_ADF_VER)" />
     <Message Text="NETCDF_VER=$(NETCDF_VER)" />
+    <Message Text="POCO_VER=$(POCO_VER)" />
     <Message Text="PROJ_VER=$(PROJ_VER)" />
     <Message Text="QT_CMAKE_DIR=$(QT_CMAKE_DIR)" />
     <Message Text="QT_DIR=$(QT_DIR)" />

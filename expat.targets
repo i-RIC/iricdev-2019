@@ -9,13 +9,13 @@
   <Target Name="expat-build-debug" Inputs="expat.targets" Outputs="$(INSTALL_DIR)\expat-$(EXPAT_VER)\debug\lib\expatd.lib" DependsOnTargets="expat-src">
     <RemoveDir Directories="$(BUILD_DIR)\expat-$(EXPAT_VER)\debug" />
     <RemoveDir Directories="$(INSTALL_DIR)\expat-$(EXPAT_VER)\debug" />
-    <Exec Command="ctest -S build-expat.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-expat-debug.log" />
+    <Exec Command="ctest -S expat.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-expat-debug.log" />
   </Target>
 
   <Target Name="expat-build-release" Inputs="expat.targets" Outputs="$(INSTALL_DIR)\expat-$(EXPAT_VER)\release\lib\expat.lib" DependsOnTargets="expat-src">
     <RemoveDir Directories="$(BUILD_DIR)\expat-$(EXPAT_VER)\release" />
     <RemoveDir Directories="$(INSTALL_DIR)\expat-$(EXPAT_VER)\release" />
-    <Exec Command="ctest -S build-expat.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-expat-release.log" />
+    <Exec Command="ctest -S expat.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-expat-release.log" />
   </Target>
 
   <Target Name="expat-src" DependsOnTargets="expat-download" Condition="!Exists('$(SRC_DIR)\expat-$(EXPAT_VER)')">

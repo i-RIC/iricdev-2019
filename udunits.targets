@@ -25,12 +25,12 @@
   </Target>
 
   <Target Name="udunits-src" DependsOnTargets="udunits-download" Condition="!Exists('$(SRC_DIR)\udunits-$(UDUNITS_VER)')">
-    <Exec Command="7z x $(DOWNLOADS_DIR)\udunits-$(UDUNITS_VER).tar.gz -so | 7z x -si -ttar -o$(SRC_DIR)" />
+    <Exec Command="7z x $(DOWNLOADS_DIR)\udunits-$(UDUNITS_VER).zip -o$(SRC_DIR)" />
   </Target>
 
-  <Target Name="udunits-download" Condition="!Exists('$(DOWNLOADS_DIR)\udunits-$(UDUNITS_VER).tar.gz')">
+  <Target Name="udunits-download" Condition="!Exists('$(DOWNLOADS_DIR)\udunits-$(UDUNITS_VER).zip')">
     <MakeDir Directories="$(DOWNLOADS_DIR)" />
-    <Message Text="Downloading udunits-$(UDUNITS_VER).tar.gz" />
-    <Exec Command="$(CURL) ftp://ftp.unidata.ucar.edu/pub/udunits/udunits-$(UDUNITS_VER).tar.gz"  WorkingDirectory="$(DOWNLOADS_DIR)" />
+    <Message Text="Downloading udunits-$(UDUNITS_VER).zip" />
+    <Exec Command="$(CURL) https://artifacts.unidata.ucar.edu/repository/downloads-udunits/udunits-$(UDUNITS_VER).zip" WorkingDirectory="$(DOWNLOADS_DIR)" />
   </Target>
 </Project>

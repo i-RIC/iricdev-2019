@@ -3,6 +3,7 @@
 ##
 
 $env:BOOST_VER="1.73.0"
+$env:CGNSLIB_VER="4.1.1-patch1"
 $env:EXPAT_VER="2.2.6"
 $env:GDAL_VER="3.0.4"
 $env:GEOS_VER="3.4.3"
@@ -16,7 +17,7 @@ $env:POCO_VER="1.9.4"
 $env:PROJ_VER="7.0.1"
 $env:QWT_VER="6.1.5"
 $env:SHAPELIB_VER="1.5.0"
-$env:UDUNITS_VER="2.2.26"
+$env:UDUNITS_VER="2.2.28"
 $env:VTK_VER="8.2.0"
 $env:YAML_CPP_VER="0.6.3"
 
