@@ -139,7 +139,7 @@ artifacts:
 
 cache:
   - 'lib\install\cgnslib-%CGNSLIB_VER%     ->   cgnslib.targets, cgnslib.cmake'
-  - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets'
+  - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets, expat.cmake'
   - 'lib\install\gdal-%GDAL_VER%           ->   gdal.targets'
   - 'lib\install\geos-%GEOS_VER%           ->   geos.targets, geos.cmake'
   - 'lib\install\hdf5-%HDF5_VER%           ->   hdf5.targets, hdf5.cmake'
