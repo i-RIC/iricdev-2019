@@ -11,7 +11,7 @@
   <!-- all -->
   <ItemGroup>
     <all-targets Include="boost-src"/>
-    <all-targets Include="cgnslib-build"/>
+    <!-- <all-targets Include="cgnslib-build"/> -->
     <all-targets Include="expat-build"/>
     <all-targets Include="gdal-build"/>
     <all-targets Include="geos-build"/>
@@ -35,7 +35,7 @@
 
   <!-- all release except vtk-build-release(36:21)-->
   <ItemGroup>
-    <appveyor-release-targets Include="cgnslib-build-release"/>
+    <!-- <appveyor-release-targets Include="cgnslib-build-release"/> -->
     <appveyor-release-targets Include="expat-build-release"/>
     <appveyor-release-targets Include="gdal-build-release"/>
     <appveyor-release-targets Include="geos-build-release"/>
@@ -58,7 +58,7 @@
 
   <!-- all debug except vtk-build-debug(36:21)-->
   <ItemGroup>
-    <appveyor-debug-targets Include="cgnslib-build-debug"/>
+    <!-- <appveyor-debug-targets Include="cgnslib-build-debug"/> -->
     <appveyor-debug-targets Include="expat-build-debug"/>
     <appveyor-debug-targets Include="gdal-build-debug"/>
     <appveyor-debug-targets Include="geos-build-debug"/>
