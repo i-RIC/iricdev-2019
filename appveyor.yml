@@ -8,36 +8,38 @@ branches:
 image: Visual Studio 2019
 
 environment:
+  iric_access_token:
+    secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
+  BUILD_TOOLS: OFF
   CL: /MP
+  GENERATOR: "Ninja Multi-Config"
+  SGEN: ninja-x64
+  TCL_EXE: ActiveTcl-8.6.9.8609.2-MSWin32-x64-5ccbd9ac8.exe
 
 # called before clone
 init:
-  - echo %APPVEYOR_BUILD_WORKER_IMAGE%
-  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2019" (set GENERATOR="Ninja Multi-Config" && set SGEN=ninja-x64)
-  - echo %GENERATOR%
-  - echo %Configuration%
   - if "%Configuration%"=="Debug"   (set config=debug)
   - if "%Configuration%"=="Release" (set config=release)
-  - set BUILD_TOOLS=OFF
-  - FOR /F "tokens=3 delims= " %%i in ('echo %APPVEYOR_BUILD_WORKER_IMAGE%') do set YEAR=%%i
-  - echo %YEAR%
-  - echo "*** Need versions.ps1 before repo is cloned ***"
+
   - ps: |
-      if ($true) {
-        Push-Location $env:TEMP
-        C:\WINDOWS\system32\curl.exe -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1" 2>&1 | Out-Null
-        .\versions.ps1
-        Pop-Location
-      }
-  - echo "*** Environment ***"
-  - set
-  - echo "*** Tool versions ***"
-  - where cmake
-  - cmake --version
-  - where ninja
-  - ninja --version
-  - where msbuild
-  - msbuild -version
+      Write-Output "*** Need versions.ps1 before repo is cloned ***"
+      Push-Location $env:TEMP
+      C:\WINDOWS\system32\curl.exe -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1" 2>&1 | Out-Null
+      .\versions.ps1
+      Pop-Location
+
+  - ps: |
+      Write-Output "*** Environment ***"
+      # Sometimes the plaintext of secure variables is displayed so filter out access_tokens
+      Get-ChildItem env: | Where-Object { $_.Name -NotMatch "access_token" }
+
+  - ps: |
+      Write-Output "*** Tool versions ***"
+      Get-Command cmake
+      Get-Command ninja
+      ninja --version
+      Get-Command msbuild
+      msbuild -version
 
 clone_folder: C:\iricdev
 
@@ -49,63 +51,69 @@ configuration:
 # It might give unexpected results (use md instead)
 before_build:
   - call C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat
-  - if "%SGEN%"=="ninja-x64"   ( call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" )
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
   - cd "%APPVEYOR_BUILD_FOLDER%"
   - copy appveyor_programs.prop programs.prop
   - call versions.cmd
-  - set BUILD_TOOLS=OFF
   - curl -L -O https://raw.githubusercontent.com/MestreLion/git-tools/cd87904e0b85d74b1d05f6acbd10553a0ceaceb0/git-restore-mtime
   - python git-restore-mtime
   - if not exist logs (md logs)
   - if not exist downloads (md downloads)
   - ps: |
-      if (Test-Path ".\lib\install" -PathType Container) {
-        # remove old versions
-        # Remove-Item -Recurse -Force -exclude expat-$env:EXPAT_VER          .\lib\install\expat-*
-        # Remove-Item -Recurse -Force -exclude gdal-$env:GDAL_VER            .\lib\install\gdal-*
-        # Remove-Item -Recurse -Force -exclude geos-$env:GEOS_VER            .\lib\install\geos-*
-        # Remove-Item -Recurse -Force -exclude hdf5-$env:HDF5_VER            .\lib\install\hdf5-*
-        # Remove-Item -Recurse -Force -exclude iriclib-$env:IRICLIB_VER      .\lib\install\iriclib-*
-        # Remove-Item -Recurse -Force -exclude libpng-$env:LIBPNG_VER        .\lib\install\libpng-*
-        # Remove-Item -Recurse -Force -exclude netcdf-c-$env:NETCDF_VER      .\lib\install\netcdf-c-*
-        # Remove-Item -Recurse -Force -exclude openssl-$env:OPENSSL_VER      .\lib\install\openssl-*
-        # Remove-Item -Recurse -Force -exclude poco-$env:POCO_VER            .\lib\install\poco-*
-        # Remove-Item -Recurse -Force -exclude proj-$env:PROJ_VER            .\lib\install\proj-*
-        # Remove-Item -Recurse -Force -exclude Qwt-$env:QWT_VER              .\lib\install\Qwt-*
-        # Remove-Item -Recurse -Force -exclude shapelib-$env:SHAPELIB_VER    .\lib\install\shapelib-*
-        # Remove-Item -Recurse -Force -exclude sqlite-src-3320300            .\lib\install\sqlite-src-*
-        # Remove-Item -Recurse -Force -exclude tiff-$env:LIBTIFF_VER         .\lib\install\tiff-*
-        # Remove-Item -Recurse -Force -exclude udunits-$env:UDUNITS_VER      .\lib\install\udunits-*
-        # Remove-Item -Recurse -Force -exclude vtk-$env:VTK_VER              .\lib\install\vtk-*
-        # Remove-Item -Recurse -Force -exclude yaml-cpp-$env:YAML_CPP_VER    .\lib\install\yaml-cpp-*
-      }
-  - ps: |
       if (-Not (Test-Path "C:\ActiveTcl\bin")) {
-        # TODO simplify this
-        $exePath = "$env:APPVEYOR_BUILD_FOLDER\downloads\ActiveTcl-8.6.9.8609.2-MSWin32-x64-5ccbd9ac8.exe"
-        if (-Not (Test-Path ".\downloads\ActiveTcl-8.6.9.8609.2-MSWin32-x64-5ccbd9ac8.exe")) {
-          Copy-Item .\ActiveTcl-8.6.9.8609.2-MSWin32-x64-5ccbd9ac8.exe .\downloads\
+        # Install tcl (to build sqlite)
+        $exePath = "$env:APPVEYOR_BUILD_FOLDER\downloads\$env:TCL_EXE"
+        if (-Not (Test-Path ".\downloads\$env:TCL_EXE")) {
+          Copy-Item .\$env:TCL_EXE .\downloads\
         }
-        cmd /c start /wait $exePath /exenoui /exelog $env:APPVEYOR_BUILD_FOLDER\logs\ActiveTcl-8.6.9.8609.2-MSWin32-x64-5ccbd9ac8.log /exenoupdates /quiet /norestart
-        Push-AppveyorArtifact $env:APPVEYOR_BUILD_FOLDER\logs\ActiveTcl-8.6.9.8609.2-MSWin32-x64-5ccbd9ac8.log
+        cmd /c start /wait $exePath /exenoui /exelog $env:APPVEYOR_BUILD_FOLDER\logs\$env:TCL_EXE.log /exenoupdates /quiet /norestart
+        Push-AppveyorArtifact $env:APPVEYOR_BUILD_FOLDER\logs\$env:TCL_EXE.log
         $env:PATH += ";C:\ActiveTcl\bin"
         Get-Command tclsh  # reqd by sqlite
       }
   - ps: |
       if (Test-Path "C:\Strawberry\perl\bin") {
+        # add perl to the path (to build openssl)
         $env:PATH = "C:\Strawberry\perl\bin;$env:PATH"
-        Get-Command perl  # reqd by openssl
-      } else {
-        Get-Command perl  # reqd by openssl
       }
+      Get-Command perl  # reqd by openssl
 
 # Since appveyor has time limits (1 hour) we must build in steps
 build_script:
   - ps: |
+      function Request-NewBuild
+      {
+        # build next step
+        #
+        # POST /api/builds
+        # see https://www.appveyor.com/docs/api/projects-builds/#start-build-of-specific-branch-commit
+
+        $token = $env:iric_access_token
+        $headers = @{}
+        $headers['Authorization'] = "Bearer $token"
+        $headers['Content-type']  = "application/json"
+
+        $build = @{}
+        $build['accountName'] = "$env:APPVEYOR_ACCOUNT_NAME"
+        $build['projectSlug'] = "$env:APPVEYOR_PROJECT_SLUG"
+        $build['branch']      = "$env:APPVEYOR_REPO_BRANCH"
+        $build['commitId']    = "$env:APPVEYOR_REPO_COMMIT"
+
+        $build_json = $build | ConvertTo-Json
+
+        $response = Invoke-WebRequest -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -Body $build_json
+      }
+
+      # Use this to signal when all libraries are up to date
+      $env:ALL_LIBS_ARE_BUILT = 'No'
+
       if (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\vtk-$env:VTK_VER\$env:config" -PathType Container))
       {
         # (~ 50 minutes)
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:vtk-build-$env:config iricdev.proj
+
+        # Everything's okay now build next step
+        Request-NewBuild()
       }
       elseif ( `
         (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\iriclib-$env:IRICLIB_VER"             -PathType Container)) -Or `
@@ -122,13 +130,48 @@ build_script:
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:gdal-build-$env:config iricdev.proj
         # openssl ~ 3 minutes
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:openssl-build-$env:config iricdev.proj
+
+        # Everything's okay now build next step
+        Request-NewBuild()
       }
       else
       {
         # (~ 33 minutes)
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:appveyor-$env:config iricdev.proj
+
+        # okay all finished
+        # now build prepost-gui (develop_v4)
+        $env:ALL_LIBS_ARE_BUILT = 'Yes'
       }
-  - create-files.cmd
+  - call create-files.cmd
+
+on_success:
+  - ps: |
+      if ($env:ALL_LIBS_ARE_BUILT -eq 'Yes')
+      {
+        # build latest prepost-gui on develop_v4 branch
+        #
+        # POST /api/builds
+        # see https://www.appveyor.com/docs/api/projects-builds/#start-build-of-branch-most-recent-commit
+
+        $token = $env:iric_access_token
+        $headers = @{}
+        $headers['Authorization'] = "Bearer $token"
+        $headers['Content-type']  = "application/json"
+
+        $build = @{}
+        $build['accountName'] = "$env:APPVEYOR_ACCOUNT_NAME"
+        $build['projectSlug'] = "prepost-gui"
+        $build['branch']      = "develop_v4"
+
+        $build_json = $build | ConvertTo-Json
+
+        $response = Invoke-WebRequest -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -Body $build_json
+      }
+      else
+      {
+        Write-Output 'Build next step'
+      }
 
 artifacts:
   - path: lib\install
