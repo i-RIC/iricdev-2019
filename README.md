@@ -31,8 +31,8 @@ cd iricdev-2019
 msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build hdf5 tools)
 copy paths.pri [prepost-gui-root]\.
 copy dirExt.prop [prepost-gui-root]\tools\data\.
-mkdir [prepost-gui-root]\libdlls\debug.
-mkdir [prepost-gui-root]\libdlls\release.
+mkdir [prepost-gui-root]\libdlls\debug
+mkdir [prepost-gui-root]\libdlls\release
 :: if building tools
 add install\hdf5-[HDF5_VER]\release\bin to "Path"
 ```
@@ -44,8 +44,8 @@ cd iricdev-2019
 msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build hdf5 tools)
 copy paths-debug-vtk-leaks.pri [prepost-gui-root]\paths.pri
 copy dirExt-debug-vtk-leaks.prop [prepost-gui-root]\tools\data\dirExt.prop
-mkdir [prepost-gui-root]\libdlls\debug.
-mkdir [prepost-gui-root]\libdlls\release.
+mkdir [prepost-gui-root]\libdlls\debug
+mkdir [prepost-gui-root]\libdlls\release
 :: if building tools
 add install\hdf5-[HDF5_VER]\release\bin to "Path"
 ```
