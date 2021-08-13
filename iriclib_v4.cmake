@@ -13,7 +13,7 @@ set(CTEST_BINARY_DIRECTORY "lib/build/${CTEST_PROJECT_NAME}-${CTEST_PROJECT_VERS
 set(PREFIX_PATH "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/cmake/hdf5")
 set(PREFIX_PATH "${PREFIX_PATH}\;${CTEST_SCRIPT_DIRECTORY}/lib/install/poco-${POCO_VER}/lib/cmake/Poco")
 
-# override LIBDIR to be consistent w/ hdf5 and cgns
+# override LIBDIR to be consistent w/ hdf5
 set(BUILD_OPTIONS
 "-DCMAKE_INSTALL_PREFIX:PATH=${CTEST_SCRIPT_DIRECTORY}/lib/install/${CTEST_PROJECT_NAME}-${CTEST_PROJECT_VERSION}"
 "-DCMAKE_PREFIX_PATH:PATH=${PREFIX_PATH}"

@@ -28,24 +28,24 @@ copy programs_std.prop to programs.prop and make any necessary changes (ie path 
 ### in a Command Prompt
 ```
 cd iricdev-2019
-msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build cgns and hdf5 tools)
+msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build hdf5 tools)
 copy paths.pri [prepost-gui-root]\.
 copy dirExt.prop [prepost-gui-root]\tools\data\.
 mkdir [prepost-gui-root]\libdlls\debug.
 mkdir [prepost-gui-root]\libdlls\release.
 :: if building tools
-add install\cgnslib-[CGNS_VER]\release\bin and install\hdf5-[HDF5_VER]\release\bin to "Path"
+add install\hdf5-[HDF5_VER]\release\bin to "Path"
 ```
 
 or if you want to use the VTK_DEBUG_LEAKS configuration
 
 ```
 cd iricdev-2019
-msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build cgns and hdf5 tools)
+msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build hdf5 tools)
 copy paths-debug-vtk-leaks.pri [prepost-gui-root]\paths.pri
 copy dirExt-debug-vtk-leaks.prop [prepost-gui-root]\tools\data\dirExt.prop
 mkdir [prepost-gui-root]\libdlls\debug.
 mkdir [prepost-gui-root]\libdlls\release.
 :: if building tools
-add install\cgnslib-[CGNS_VER]\release\bin and install\hdf5-[HDF5_VER]\release\bin to "Path"
+add install\hdf5-[HDF5_VER]\release\bin to "Path"
 ```

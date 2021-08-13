@@ -2,7 +2,6 @@ set(CTEST_PROJECT_NAME "iriclib-git")
 set(CTEST_BUILD_NAME "$ENV{SGEN}-iriclib-git")
 set(CTEST_SITE "$ENV{COMPUTERNAME}")
 
-set(CGNS_VER "$ENV{CGNSLIB_VER}")
 set(HDF5_VER "$ENV{HDF5_VER}")
 set(POCO_VER "$ENV{POCO_VER}")
 
@@ -44,22 +43,6 @@ if (WIN32)
 
   set(poco_dir "${CTEST_SCRIPT_DIRECTORY}/lib/install/poco-${POCO_VER}")
 
-  # unittests_cgnsfile
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${unit_dir}
-#        )
-  # unittest_lock
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${lock_dir}
-#        )
-  # unittest_cg_open_modify
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${mdfy_dir}
-#        )
-  # unittest_cg_open_read
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${read_dir}
-#        )
 
   if(${CONF_DIR} STREQUAL "debug")
     # unittests_cgnsfile

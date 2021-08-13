@@ -61,7 +61,6 @@ before_build:
   - ps: |
       if (Test-Path ".\lib\install" -PathType Container) {
         # remove old versions
-        # Remove-Item -Recurse -Force -exclude cgnslib-$env:CGNSLIB_VER      .\lib\install\cgnslib-*
         # Remove-Item -Recurse -Force -exclude expat-$env:EXPAT_VER          .\lib\install\expat-*
         # Remove-Item -Recurse -Force -exclude gdal-$env:GDAL_VER            .\lib\install\gdal-*
         # Remove-Item -Recurse -Force -exclude geos-$env:GEOS_VER            .\lib\install\geos-*
@@ -138,7 +137,6 @@ artifacts:
   - path: dirExt.prop
 
 cache:
-  - 'lib\install\cgnslib-%CGNSLIB_VER%     ->   cgnslib.targets, cgnslib.cmake'
   - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets, expat.cmake'
   - 'lib\install\gdal-%GDAL_VER%           ->   gdal.targets'
   - 'lib\install\geos-%GEOS_VER%           ->   geos.targets, geos.cmake'
