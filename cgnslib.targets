@@ -4,22 +4,6 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
-  <!-- cgnslib-adf -->
-
-  <Target Name="cgnslib-adf-build" DependsOnTargets="cgnslib-adf-build-debug;cgnslib-adf-build-release" />
-
-  <Target Name="cgnslib-adf-build-debug" Inputs="cgnslib.targets;cgnslib-adf.cmake" Outputs="$(INSTALL_DIR)\cgnslib-adf-$(CGNSLIB_VER)\debug\lib\cgnsdll.lib" DependsOnTargets="cgnslib-src">
-    <RemoveDir Directories="$(BUILD_DIR)\cgnslib-adf-$(CGNSLIB_VER)\debug" />
-    <RemoveDir Directories="$(INSTALL_DIR)\cgnslib-adf-$(CGNSLIB_VER)\debug" />
-    <Exec Command="ctest -S cgnslib-adf.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-cgnslib-adf-debug.log" />
-  </Target>
-
-  <Target Name="cgnslib-adf-build-release" Inputs="cgnslib.targets;cgnslib-adf.cmake" Outputs="$(INSTALL_DIR)\cgnslib-adf-$(CGNSLIB_VER)\release\lib\cgnsdll.lib" DependsOnTargets="cgnslib-src">
-    <RemoveDir Directories="$(BUILD_DIR)\cgnslib-adf-$(CGNSLIB_VER)\release" />
-    <RemoveDir Directories="$(INSTALL_DIR)\cgnslib-adf-$(CGNSLIB_VER)\release" />
-    <Exec Command="ctest -S cgnslib-adf.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-cgnslib-adf-release.log" />
-  </Target>
-
   <!-- cgnslib -->
 
   <Target Name="cgnslib-build" DependsOnTargets="cgnslib-build-debug;cgnslib-build-release" />
