@@ -7,8 +7,14 @@ branches:
 # QT 5.14 is only available with VS2019 on appveyor
 image: Visual Studio 2019
 
+# @TODO Update kskinoue0612_access_token using https://ci.appveyor.com/api-keys and
+# https://ci.appveyor.com/account/<APPVEYOR_ACCOUNT_NAME>/tools/encrypt
 environment:
   iric_access_token:
+    secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
+  scharlton2_access_token:
+    secure: 4ZWvNvHKV5vYSHnrU6xc5kVZvpP90aU5agwfeZfnk6U=
+  kskinoue0612_access_token:
     secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
   BUILD_TOOLS: OFF
   CL: /MP
@@ -88,9 +94,13 @@ build_script:
         # POST /api/builds
         # see https://www.appveyor.com/docs/api/projects-builds/#start-build-of-specific-branch-commit
 
-        $token = $env:iric_access_token
+        $tokens = @{}
+        $tokens['i-RIC']        = $env:iric_access_token
+        $tokens['scharlton2']   = $env:scharlton2_access_token
+        $tokens['kskinoue0612'] = $env:kskinoue0612_access_token
+
         $headers = @{}
-        $headers['Authorization'] = "Bearer $token"
+        $headers['Authorization'] = "Bearer $tokens[$env:APPVEYOR_ACCOUNT_NAME]"
         $headers['Content-type']  = "application/json"
 
         $build = @{}
@@ -154,9 +164,14 @@ on_success:
         # POST /api/builds
         # see https://www.appveyor.com/docs/api/projects-builds/#start-build-of-branch-most-recent-commit
 
-        $token = $env:iric_access_token
+
+        $tokens = @{}
+        $tokens['i-RIC']        = $env:iric_access_token
+        $tokens['scharlton2']   = $env:scharlton2_access_token
+        $tokens['kskinoue0612'] = $env:kskinoue0612_access_token
+
         $headers = @{}
-        $headers['Authorization'] = "Bearer $token"
+        $headers['Authorization'] = "Bearer $tokens[$env:APPVEYOR_ACCOUNT_NAME]"
         $headers['Content-type']  = "application/json"
 
         $build = @{}
