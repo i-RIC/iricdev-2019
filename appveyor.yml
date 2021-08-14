@@ -13,7 +13,7 @@ environment:
   iric_access_token:
     secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
   scharlton2_access_token:
-    secure: 4ZWvNvHKV5vYSHnrU6xc5kVZvpP90aU5agwfeZfnk6U=
+    secure: aHOn1rsVBVVMMSOz1L/sh4JmUooKq1WsJTCVuPfQoNc=
   kskinoue0612_access_token:
     secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
   BUILD_TOOLS: OFF
