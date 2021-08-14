@@ -100,7 +100,7 @@ build_script:
         $tokens['kskinoue0612'] = $env:kskinoue0612_access_token
 
         $headers = @{}
-        $headers['Authorization'] = "Bearer $tokens[$env:APPVEYOR_ACCOUNT_NAME]"
+        $headers['Authorization'] = "Bearer $($tokens[$env:APPVEYOR_ACCOUNT_NAME])"
         $headers['Content-type']  = "application/json"
 
         $build = @{}
@@ -171,7 +171,7 @@ on_success:
         $tokens['kskinoue0612'] = $env:kskinoue0612_access_token
 
         $headers = @{}
-        $headers['Authorization'] = "Bearer $tokens[$env:APPVEYOR_ACCOUNT_NAME]"
+        $headers['Authorization'] = "Bearer $($tokens[$env:APPVEYOR_ACCOUNT_NAME])"
         $headers['Content-type']  = "application/json"
 
         $build = @{}
