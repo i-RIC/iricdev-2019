@@ -123,7 +123,7 @@ build_script:
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:vtk-build-$env:config iricdev.proj
 
         # Everything's okay now build next step
-        Request-NewBuild
+        if ($env:Configuration -eq 'Release') { Request-NewBuild }
       }
       elseif ( `
         (-Not (Test-Path "$env:APPVEYOR_BUILD_FOLDER\lib\install\iriclib-$env:IRICLIB_VER"             -PathType Container)) -Or `
@@ -142,7 +142,7 @@ build_script:
         msbuild -noLogo -verbosity:minimal -maxCpuCount -target:openssl-build-$env:config iricdev.proj
 
         # Everything's okay now build next step
-        Request-NewBuild
+        if ($env:Configuration -eq 'Release') { Request-NewBuild }
       }
       else
       {
@@ -157,7 +157,7 @@ build_script:
 
 on_success:
   - ps: |
-      if ($env:ALL_LIBS_ARE_BUILT -eq 'Yes')
+      if (($env:ALL_LIBS_ARE_BUILT -eq 'Yes') -AND ($env:Configuration -eq 'Release'))
       {
         # build latest prepost-gui on develop_v4 branch
         #
