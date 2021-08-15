@@ -2,6 +2,18 @@
 
 Build libraries needed to build iRIC on Windows
 
+### To clear build cache:
+Run these commands in PowerShell: 
+```
+$token = '<your-api-token>'
+$account = '<accountName>'
+$headers = @{}
+$headers['Authorization'] = "Bearer $token"
+$headers["Content-type"] = "application/json"
+Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$account/iricdev-2019" -Headers $headers -Method DELETE
+```
+see https://www.appveyor.com/docs/api/projects-builds/#delete-project-build-cache
+
 ## Windows Visual Studio Community 2019 Build (Full)
 * Visual Studio 2019 available from https://visualstudio.microsoft.com/vs/
   Install at least Workload 'Desktop development with C++' (7.02 GB)
