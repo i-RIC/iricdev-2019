@@ -7,10 +7,10 @@ Run these commands in PowerShell:
 ```
 $token = '<your-api-token>'
 $account = '<accountName>'
-$headers = @{}
-$headers['Authorization'] = "Bearer $token"
-$headers["Content-type"] = "application/json"
-Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$account/iricdev-2019" -Headers $headers -Method DELETE
+$h = @{}
+$h['Authorization'] = "Bearer $token"
+$h["Content-type"] = "application/json"
+Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$account/iricdev-2019/buildcache" -Headers $h -Method DELETE
 ```
 see https://www.appveyor.com/docs/api/projects-builds/#delete-project-build-cache
 
