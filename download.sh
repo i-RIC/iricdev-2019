@@ -15,10 +15,6 @@ if [ ! -f "hdf5-${HDF5_VER}.tar.gz" ]; then
   wget --no-check-certificate https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${MAJOR}.${MINOR}/hdf5-${HDF5_VER}/src/hdf5-${HDF5_VER}.tar.gz
 fi
 
-if [ ! -f "cgnslib_${CGNSLIB_VER}.tar.gz" ]; then
-  wget --no-check-certificate https://downloads.sourceforge.net/project/cgns/cgnslib_3.2/cgnslib_${CGNSLIB_VER}.tar.gz
-fi
-
 if [ ! -f "iriclib-${IRICLIB_VER}.zip" ]; then
   wget --no-check-certificate https://github.com/i-RIC/iriclib/archive/v${IRICLIB_VER}.zip --output-document=iriclib-${IRICLIB_VER}.zip
 fi

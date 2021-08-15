@@ -2,6 +2,18 @@
 
 Build libraries needed to build iRIC on Windows
 
+### To clear build cache:
+Run these commands in PowerShell: 
+```
+$token = '<your-api-token>'
+$account = '<accountName>'
+$h = @{}
+$h['Authorization'] = "Bearer $token"
+$h["Content-type"] = "application/json"
+Invoke-RestMethod -Uri "https://ci.appveyor.com/api/projects/$account/iricdev-2019/buildcache" -Headers $h -Method DELETE
+```
+see https://www.appveyor.com/docs/api/projects-builds/#delete-project-build-cache
+
 ## Windows Visual Studio Community 2019 Build (Full)
 * Visual Studio 2019 available from https://visualstudio.microsoft.com/vs/
   Install at least Workload 'Desktop development with C++' (7.02 GB)
@@ -28,24 +40,24 @@ copy programs_std.prop to programs.prop and make any necessary changes (ie path 
 ### in a Command Prompt
 ```
 cd iricdev-2019
-msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build cgns and hdf5 tools)
+msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build hdf5 tools)
 copy paths.pri [prepost-gui-root]\.
 copy dirExt.prop [prepost-gui-root]\tools\data\.
-mkdir [prepost-gui-root]\libdlls\debug.
-mkdir [prepost-gui-root]\libdlls\release.
+mkdir [prepost-gui-root]\libdlls\debug
+mkdir [prepost-gui-root]\libdlls\release
 :: if building tools
-add install\cgnslib-[CGNS_VER]\release\bin and install\hdf5-[HDF5_VER]\release\bin to "Path"
+add install\hdf5-[HDF5_VER]\release\bin to "Path"
 ```
 
 or if you want to use the VTK_DEBUG_LEAKS configuration
 
 ```
 cd iricdev-2019
-msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build cgns and hdf5 tools)
+msbuild_2019.cmd (or msbuild_2019_w_tools.cmd to build hdf5 tools)
 copy paths-debug-vtk-leaks.pri [prepost-gui-root]\paths.pri
 copy dirExt-debug-vtk-leaks.prop [prepost-gui-root]\tools\data\dirExt.prop
-mkdir [prepost-gui-root]\libdlls\debug.
-mkdir [prepost-gui-root]\libdlls\release.
+mkdir [prepost-gui-root]\libdlls\debug
+mkdir [prepost-gui-root]\libdlls\release
 :: if building tools
-add install\cgnslib-[CGNS_VER]\release\bin and install\hdf5-[HDF5_VER]\release\bin to "Path"
+add install\hdf5-[HDF5_VER]\release\bin to "Path"
 ```

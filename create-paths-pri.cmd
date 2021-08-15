@@ -3,9 +3,6 @@ setlocal
 set topdir=%~dp0
 set topdir=%topdir:\=/%
 call versions.cmd
-if "%CGNSLIB_VER%"=="4.1.1" (
-  set CGNSLIB_VER=%CGNSLIB_VER%-patch1
-)
 for /f "tokens=1 delims=." %%a in ("%VTK_VER%") do set VTK_MAJOR_VERSION=%%a
 for /f "tokens=2 delims=." %%a in ("%VTK_VER%") do set VTK_MINOR_VERSION=%%a
 for /f "tokens=1,2 delims=." %%a in ("%VTK_VER%") do set VTK_MAJ_MIN=%%a.%%b
@@ -19,9 +16,6 @@ if "%DEBUG_LEAKS%"=="YES" (
 ) else (
   @echo.	LIBS += -L"%topdir%lib/install/vtk-%VTK_VER%/debug/lib"
 )
-@echo.
-@echo.	### # cgnslib
-@echo.	### LIBS += -L"%topdir%lib/install/cgnslib-%CGNSLIB_VER%/debug/lib"
 @echo.
 @echo.	# iriclib
 @echo.	LIBS += -L"%topdir%lib/install/iriclib-%IRICLIB_VER%/lib"
@@ -59,9 +53,6 @@ if "%DEBUG_LEAKS%"=="YES" (
 @echo.
 @echo.	# vtk
 @echo.	LIBS += -L"%topdir%lib/install/vtk-%VTK_VER%/release/lib"
-@echo.
-@echo.	### # cgnslib
-@echo.	### LIBS += -L"%topdir%lib/install/cgnslib-%CGNSLIB_VER%/release/lib"
 @echo.
 @echo.	# iriclib
 @echo.	LIBS += -L"%topdir%lib/install/iriclib-%IRICLIB_VER%/lib"
@@ -108,9 +99,6 @@ if "%DEBUG_LEAKS%"=="YES" (
 @echo.
 @echo.# hdf5
 @echo.INCLUDEPATH += "%topdir%lib/install/hdf5-%HDF5_VER%/include"
-@echo.
-@echo.### # cgnslib
-@echo.### INCLUDEPATH += "%topdir%lib/install/cgnslib-%CGNSLIB_VER%/release/include"
 @echo.
 @echo.# iriclib
 @echo.INCLUDEPATH += "%topdir%lib/install/iriclib-%IRICLIB_VER%/include"

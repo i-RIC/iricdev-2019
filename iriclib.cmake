@@ -18,7 +18,7 @@ else()
 endif()
 set(PREFIX_PATH "${PREFIX_PATH}\;${CTEST_SCRIPT_DIRECTORY}/lib/install/poco-${POCO_VER}/lib/cmake/Poco")
 
-# override LIBDIR to be consistent w/ hdf5 and cgns
+# override LIBDIR to be consistent w/ hdf5
 set(BUILD_OPTIONS 
 "-DCMAKE_INSTALL_PREFIX:PATH=${CTEST_SCRIPT_DIRECTORY}/lib/install/iriclib-${VER}"
 "-DCMAKE_PREFIX_PATH:PATH=${PREFIX_PATH}"

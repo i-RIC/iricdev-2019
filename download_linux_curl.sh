@@ -18,12 +18,6 @@ if [ ! -f "hdf5-${HDF5_VER}.tar.gz" ]; then
   ${CURL} https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${MAJOR}.${MINOR}/hdf5-${HDF5_VER}/src/hdf5-${HDF5_VER}.tar.gz
 fi
 
-if [ ! -f "cgnslib_${CGNSLIB_VER}.tar.gz" ]; then
-  MAJOR=$(echo ${CGNSLIB_VER} | cut -d '.' -f 1)
-  MINOR=$(echo ${CGNSLIB_VER} | cut -d '.' -f 2)
-  ${CURL} https://downloads.sourceforge.net/project/cgns/cgnslib_${MAJOR}.${MINOR}/cgnslib_${CGNSLIB_VER}.tar.gz
-fi
-
 if [ ! -f "iriclib-${IRICLIB_VER}.zip" ]; then
   ${CURL} https://github.com/i-RIC/iriclib/archive/v${IRICLIB_VER}.zip
   mv v${IRICLIB_VER}.zip iriclib-${IRICLIB_VER}.zip
