@@ -28,8 +28,9 @@ init:
   - if "%Configuration%"=="Release" (set config=release)
 
   - ps: |
-      Write-Output "*** Need versions.ps1 before repo is cloned ***"
+      Write-Output "*** Need versions.[cmd,ps1] before repo is cloned ***"
       Push-Location $env:TEMP
+      C:\WINDOWS\system32\curl.exe -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.cmd" 2>&1 | Out-Null
       C:\WINDOWS\system32\curl.exe -L -O "https://raw.githubusercontent.com/$env:APPVEYOR_REPO_NAME/$env:APPVEYOR_REPO_COMMIT/versions.ps1" 2>&1 | Out-Null
       .\versions.ps1
       Pop-Location
