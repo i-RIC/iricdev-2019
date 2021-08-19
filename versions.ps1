@@ -1,32 +1,21 @@
 ##
 ## versions.ps1
-##
+## 
+## All version numbers are stored in versions.cmd
 
-$env:BOOST_VER="1.73.0"
-$env:CGNSLIB_VER="4.1.1-patch1"
-$env:EXPAT_VER="2.2.6"
-$env:GDAL_VER="3.0.4"
-$env:GEOS_VER="3.4.3"
-$env:HDF5_VER="1.8.21"
-$env:IRICLIB_VER="4.0.18"
-$env:LIBPNG_VER="1.6.37"
-$env:LIBTIFF_VER="4.1.0"
-$env:NETCDF_VER="4.7.4"
-$env:OPENSSL_VER="1.0.2p"
-$env:POCO_VER="1.9.4"
-$env:PROJ_VER="7.0.1"
-$env:QWT_VER="6.1.5"
-$env:SHAPELIB_VER="1.5.0"
-$env:UDUNITS_VER="2.2.28"
-$env:VTK_VER="8.2.0"
-$env:YAML_CPP_VER="0.6.3"
 
-##
-## replace . with _
-##
-$env:BOOST_UVER=($env:BOOST_VER).Replace(".", "_")
-$env:EXPAT_UVER=($env:EXPAT_VER).Replace(".", "_")
-$env:OPENSSL_UVER=($env:OPENSSL_VER).Replace(".", "_")
+# Some builds require underscores instead of decimal points
+# they have a _UVER suffix
+$uvers = "BOOST", "EXPAT", "OPENSSL"
+
+(Get-Content .\versions.cmd) | Foreach-Object {
+    if ($_ -imatch "^set (?<var>.*)_VER=(?<val>.*)$") {
+        [System.Environment]::SetEnvironmentVariable($matches['var'] + "_VER",$matches['val'])
+        if ($uvers -contains $matches['var']) {
+            [System.Environment]::SetEnvironmentVariable($matches['var'] + "_UVER",$matches['val'].Replace('.', '_'))
+        }
+    }
+}
 
 if (-Not (Test-Path env:BUILD_TOOLS)) { $env:BUILD_TOOLS="OFF" }
 

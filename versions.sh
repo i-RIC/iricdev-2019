@@ -1,36 +1,27 @@
-#!/bin/sh
-VTK_VER=6.1.0
-HDF5_VER=1.8.21
-CGNSLIB_VER=4.1.1
-IRICLIB_VER=4.0.19
-IRICLIB_ADF_VER=0.2
-SHAPELIB_VER=1.3.0
-QWT_VER=6.1.3
-GDAL_VER=1.11.2
-PROJ_VER=4.8.0
-NETCDF_VER=4.3.3
-GEOS_VER=3.4.3
-BOOST_VER=1.59.0
-YAML_CPP_VER=0.5.2
-EXPAT_VER=2.2.6
-UDUNITS_VER=2.2.26
-OPENSSL_VER=1.0.2p
-LIBPNG_VER=1.6.37
+#!/bin/bash
 
+# All version numbers are stored in versions.cmd
 #
+# This has a strange syntax and only works in
+# Bash/Zsh/Ksh93
+# see https://www.shellcheck.net/
+# see http://mywiki.wooledge.org/BashFAQ/024
+
+while IFS= read -r line
+do
+  eval "${line//set/export}"
+done < <(grep '^set \(.*\)_VER=\(.*\)' versions.cmd)
+
 # replace . with _
-#
-BOOST_UVER=$(echo $BOOST_VER | sed 's/\./_/g')
-EXPAT_UVER=$(echo R_$EXPAT_VER | sed 's/\./_/g')
-OPENSSL_UVER=$(echo $OPENSSL_VER | sed 's/\./_/g')
-LIBPNG_NVER=$(echo $LIBPNG_VER | sed 's/\.//g')
+BOOST_UVER=${BOOST_VER//\./_}
+EXPAT_UVER=${EXPAT_VER//\./_}
+OPENSSL_UVER=${OPENSSL_VER//\./_}
 
-export VTK_VER HDF5_VER CGNSLIB_VER IRICLIB_VER SHAPELIB_VER QWT_VER
-export GDAL_VER PROJ_VER NETCDF_VER GEOS_VER BOOST_VER YAML_CPP_VER
-export EXPAT_VER UDUNITS_VER BOOST_UVER EXPAT_UVER
-export OPENSSL_VER OPENSSL_UVER IRICLIB_ADF_VER
+# remove .  (Not sure if this is still used)
+LIBPNG_NVER=${LIBPNG_NVER//\./}
+
+export BOOST_UVER EXPAT_UVER OPENSSL_UVER LIBPNG_NVER
 
 if [ -z "$BUILD_TOOLS" ]; then
-  BUILD_TOOLS="OFF"
+  export BUILD_TOOLS="OFF"
 fi
-export BUILD_TOOLS
