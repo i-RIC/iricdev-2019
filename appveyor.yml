@@ -7,15 +7,16 @@ branches:
 # QT 5.14 is only available with VS2019 on appveyor
 image: Visual Studio 2019
 
-# @TODO Update kskinoue0612_access_token using https://ci.appveyor.com/api-keys and
-# https://ci.appveyor.com/account/<APPVEYOR_ACCOUNT_NAME>/tools/encrypt
+# When update access token, use the following pages:
+# * https://ci.appveyor.com/api-keys
+# * https://ci.appveyor.com/account/<APPVEYOR_ACCOUNT_NAME>/tools/encrypt
 environment:
   iric_access_token:
     secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
   scharlton2_access_token:
     secure: aHOn1rsVBVVMMSOz1L/sh4JmUooKq1WsJTCVuPfQoNc=
   kskinoue0612_access_token:
-    secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
+    secure: sJfz9sGe/Ka0KfZlytp1GeLDgBWE5AwChQHXosJlx/w=
   BUILD_TOOLS: OFF
   CL: /MP
   GENERATOR: "Ninja Multi-Config"
