@@ -1,4 +1,4 @@
-## iricdev-2019 [![Build status](https://ci.appveyor.com/api/projects/status/3ua1m85c1f88nbx1?svg=true)](https://ci.appveyor.com/project/i-RIC/iricdev-2019)
+## iricdev-2019 [![Build status](https://ci.appveyor.com/api/projects/status/duj05l5t7uqfrypw/branch/2019?svg=true)](https://ci.appveyor.com/project/i-RIC/iricdev-2019/branch/2019)
 
 Build libraries needed to build iRIC on Windows
 
