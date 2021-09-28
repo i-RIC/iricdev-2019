@@ -17,8 +17,8 @@ on:
 
 jobs:
   build:
+    if: ${{ github.repository == 'i-RIC/iricdev-2019' }} 
     runs-on: windows-latest
-
     steps:
       - name: REST-API
         run: |
