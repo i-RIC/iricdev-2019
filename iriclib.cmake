@@ -34,7 +34,6 @@ ctest_start("Experimental")
 ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}"
                 OPTIONS "${BUILD_OPTIONS}"
                 CAPTURE_CMAKE_ERROR configure_error)
-message(STATUS "After configure")
 if(configure_error)
   message(FATAL_ERROR "*** Configure failed ***")
 endif()
