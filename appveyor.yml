@@ -62,6 +62,8 @@ init:
 
 clone_folder: C:\iricdev
 
+install: choco install -y swig
+
 configuration:
   - Debug
   - Release
