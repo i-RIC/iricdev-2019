@@ -27,9 +27,35 @@ set(BUILD_OPTIONS
 "-DBUILD_TESTING:BOOL=OFF"
 )
 
-CTEST_START("Experimental")
-CTEST_CONFIGURE(BUILD "${CTEST_BINARY_DIRECTORY}"
-                OPTIONS "${BUILD_OPTIONS}")
-CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}")
-####CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}" TARGET RUN_TESTS)
-CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}" TARGET install)
+# Start
+ctest_start("Experimental")
+
+# Configure
+ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}"
+                OPTIONS "${BUILD_OPTIONS}"
+                CAPTURE_CMAKE_ERROR configure_error)
+if(configure_error)
+  message(FATAL_ERROR "*** Configure failed ***")
+endif()
+
+# Build
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}"
+            CAPTURE_CMAKE_ERROR build_error)
+if(build_error)
+  message(FATAL_ERROR "*** Build failed ***")
+endif()
+
+# # Test
+# ctest_test(RETURN_VALUE return_value
+#            CAPTURE_CMAKE_ERROR test_error)
+# if(test_error OR return_value)
+#   message(FATAL_ERROR "*** Test failed ***")
+# endif()
+
+# Install
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}"
+            TARGET install
+            CAPTURE_CMAKE_ERROR install_error)
+if(install_error)
+  message(FATAL_ERROR "*** Install failed ***")
+endif()
