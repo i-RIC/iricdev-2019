@@ -10,7 +10,10 @@ jobs:
   build:
     runs-on: windows-2019
 
-    -steps:
+    steps:
+
+    - name: Checkout iricdev-2019
+      uses: actions/checkout@v2
 
     - name: Setup path for msbuild
       uses: microsoft/setup-msbuild@v1.0.2
