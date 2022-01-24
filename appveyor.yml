@@ -20,6 +20,8 @@ environment:
     secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
   scharlton2_access_token:
     secure: aHOn1rsVBVVMMSOz1L/sh4JmUooKq1WsJTCVuPfQoNc=
+  iric_scharlton2_ghp:
+    secure: lBwvZB6VY32cT2cSrTTjA6ZTYuzduDGVkJNlzl/fHSrNN03xDjRS5Vs2Iijg5g03
   kskinoue0612_access_token:
     secure: sJfz9sGe/Ka0KfZlytp1GeLDgBWE5AwChQHXosJlx/w=
   BUILD_TOOLS: OFF
@@ -218,6 +220,19 @@ artifacts:
   - path: logs
   - path: paths.pri
   - path: dirExt.prop
+
+deploy:
+    # Deploy to GitHub Releases
+  - provider: GitHub
+    description: 'Release description'
+    auth_token:
+      secure: lBwvZB6VY32cT2cSrTTjA6ZTYuzduDGVkJNlzl/fHSrNN03xDjRS5Vs2Iijg5g03
+    artifact: lib/install
+    draft: true
+    prerelease: true
+    on:
+      branch: 2019
+      APPVEYOR_REPO_TAG: true
 
 cache:
   - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets, expat.cmake'
