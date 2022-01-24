@@ -34,7 +34,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
-        key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}
+        key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
 
     - name: Build hdf5
       if: steps.cache-hdf5.outputs.cache-hit != 'true'
