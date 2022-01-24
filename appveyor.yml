@@ -232,7 +232,7 @@ deploy:
     prerelease: true
     on:
       branch: 2019
-      APPVEYOR_REPO_TAG: true
+      APPVEYOR_REPO_TAG: true     # must not annotated
 
 cache:
   - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets, expat.cmake'
