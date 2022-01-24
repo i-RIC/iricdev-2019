@@ -222,7 +222,7 @@ artifacts:
   - path: dirExt.prop
 
 deploy:
-    # Deploy to GitHub Releases
+    # Deploy to GitHub
   - provider: GitHub
     description: 'Release description'
     auth_token:
