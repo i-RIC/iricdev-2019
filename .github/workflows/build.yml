@@ -15,6 +15,9 @@ jobs:
     - name: Checkout iricdev-2019
       uses: actions/checkout@v2
 
+    - name: Setup programs
+      run: Copy-Item .\programs_std.prop .\programs.prop
+
     - name: Setup path for msbuild
       uses: microsoft/setup-msbuild@v1.0.2
       with:
