@@ -20,8 +20,8 @@ environment:
     secure: HoNMU0SsYDs+p/uzOhA6tUowlfLN02GXEeHQdUsE+G4=
   scharlton2_access_token:
     secure: aHOn1rsVBVVMMSOz1L/sh4JmUooKq1WsJTCVuPfQoNc=
-  iric_scharlton2_ghp:
-    secure: lBwvZB6VY32cT2cSrTTjA6ZTYuzduDGVkJNlzl/fHSrNN03xDjRS5Vs2Iijg5g03
+  # iric_scharlton2_ghp:
+  #   secure: lBwvZB6VY32cT2cSrTTjA6ZTYuzduDGVkJNlzl/fHSrNN03xDjRS5Vs2Iijg5g03
   kskinoue0612_access_token:
     secure: sJfz9sGe/Ka0KfZlytp1GeLDgBWE5AwChQHXosJlx/w=
   BUILD_TOOLS: OFF
@@ -67,7 +67,7 @@ clone_folder: C:\iricdev
 install: choco install -y swig
 
 configuration:
-  - Debug
+#  - Debug
   - Release
 
 # Note mkdir is from Git (C:\Program Files\Git\usr\bin\mkdir.exe)
@@ -221,18 +221,29 @@ artifacts:
   - path: paths.pri
   - path: dirExt.prop
 
+before_deploy:
+  - ps: |
+      $tokens = @{}
+      $tokens['i-RIC']        = $env:iric_access_token
+      $tokens['scharlton2']   = $env:scharlton2_access_token
+      $tokens['kskinoue0612'] = $env:kskinoue0612_access_token
+      $env:DEPLOY_AUTH_TOKEN  = $tokens[$env:APPVEYOR_ACCOUNT_NAME]
+
+
 deploy:
     # Deploy to GitHub
+    # This still needs work. I think 2019-46 (v0.0.0) failed because the secure token
+    # was encrypted using i-RIC instead of scharlton2
   - provider: GitHub
     description: 'Release description'
     auth_token:
-      secure: lBwvZB6VY32cT2cSrTTjA6ZTYuzduDGVkJNlzl/fHSrNN03xDjRS5Vs2Iijg5g03
+      secure: $(DEPLOY_AUTH_TOKEN)
     artifact: lib/install
     draft: true
     prerelease: true
     on:
       branch: 2019
-      APPVEYOR_REPO_TAG: true     # must not annotated
+      APPVEYOR_REPO_TAG: true     # must not be annotated
 
 cache:
   - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets, expat.cmake'
