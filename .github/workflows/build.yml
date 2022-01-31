@@ -42,20 +42,20 @@ jobs:
         Get-Command cmake
         cmake --version
 
-    - name: Cache qwt
-      id: cache-qwt
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
-        key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
+    # - name: Cache qwt
+    #   id: cache-qwt
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
+    #     key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
 
-    - name: Build qwt
-      if: steps.cache-qwt.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        echo '@TODO call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"'
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
+    # - name: Build qwt
+    #   if: steps.cache-qwt.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     echo '@TODO call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"'
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
 
     - name: Cache boost
       id: cache-boost
