@@ -222,29 +222,29 @@ artifacts:
   - path: paths.pri
   - path: dirExt.prop
 
-before_deploy:
-  - ps: |
-      $tokens = @{}
-      $tokens['i-RIC']        = $env:iric_access_token
-      $tokens['scharlton2']   = $env:scharlton2_access_token
-      $tokens['kskinoue0612'] = $env:kskinoue0612_access_token
-      $env:DEPLOY_AUTH_TOKEN  = $tokens[$env:APPVEYOR_ACCOUNT_NAME]
+# before_deploy:
+#   - ps: |
+#       $tokens = @{}
+#       $tokens['i-RIC']        = $env:iric_access_token
+#       $tokens['scharlton2']   = $env:scharlton2_access_token
+#       $tokens['kskinoue0612'] = $env:kskinoue0612_access_token
+#       $env:DEPLOY_AUTH_TOKEN  = $tokens[$env:APPVEYOR_ACCOUNT_NAME]
 
 
-deploy:
-    # Deploy to GitHub
-    # This still needs work. I think 2019-46 (v0.0.0) failed because the secure token
-    # was encrypted using i-RIC instead of scharlton2
-  - provider: GitHub
-    description: 'Release description'
-    auth_token:
-      secure: $(DEPLOY_AUTH_TOKEN)
-    artifact: $(Configuration)
-    draft: true
-    prerelease: true
-    on:
-      branch: 2019
-      APPVEYOR_REPO_TAG: true     # must not be annotated
+# deploy:
+#     # Deploy to GitHub
+#     # This still needs work. I think 2019-46 (v0.0.0) failed because the secure token
+#     # was encrypted using i-RIC instead of scharlton2
+#   - provider: GitHub
+#     description: 'Release description'
+#     auth_token:
+#       secure: $(DEPLOY_AUTH_TOKEN)
+#     artifact: $(Configuration)
+#     draft: true
+#     prerelease: true
+#     on:
+#       branch: 2019
+#       APPVEYOR_REPO_TAG: true     # must not be annotated
 
 cache:
   - 'lib\install\expat-%EXPAT_VER%         ->   expat.targets, expat.cmake'
