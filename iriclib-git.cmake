@@ -46,17 +46,17 @@ if(build_error)
   message(FATAL_ERROR "*** Build failed ***")
 endif()
 
-# # Test
-# ctest_test(RETURN_VALUE return_value
-#            CAPTURE_CMAKE_ERROR test_error)
-# if(test_error OR return_value)
-#   message(FATAL_ERROR "*** Test failed ***")
-# endif()
+# Test
+ctest_test(RETURN_VALUE return_value
+           CAPTURE_CMAKE_ERROR test_error)
+if(test_error OR return_value)
+  message(FATAL_ERROR "*** Test failed ***")
+endif()
 
-# # Install
-# ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}"
-#             TARGET install
-#             CAPTURE_CMAKE_ERROR install_error)
-# if(install_error)
-#   message(FATAL_ERROR "*** Install failed ***")
-# endif()
+# Install
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}"
+            TARGET install
+            CAPTURE_CMAKE_ERROR install_error)
+if(install_error)
+  message(FATAL_ERROR "*** Install failed ***")
+endif()
