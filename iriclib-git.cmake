@@ -2,12 +2,10 @@ set(CTEST_PROJECT_NAME "iriclib-git")
 set(CTEST_BUILD_NAME "$ENV{SGEN}-iriclib-git")
 set(CTEST_SITE "$ENV{COMPUTERNAME}")
 
-set(CGNS_VER "$ENV{CGNSLIB_VER}")
 set(HDF5_VER "$ENV{HDF5_VER}")
 set(POCO_VER "$ENV{POCO_VER}")
 
 set(CTEST_SOURCE_DIRECTORY "${CTEST_SCRIPT_DIRECTORY}/lib/src/iriclib-git")
-# avoid caching hdf5 settings
 if(${CONF_DIR} STREQUAL "debug")
   set(CTEST_BINARY_DIRECTORY "${CTEST_SCRIPT_DIRECTORY}/lib/src/iriclib-git/_build_debug")
 else()
@@ -16,92 +14,49 @@ endif()
 
 # build PREFIX_PATH (Note the escaped semicolon)
 if (WIN32)
-  set(PREFIX_PATH "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/${CONF_DIR}/cmake/hdf5")
+  set(PREFIX_PATH "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/cmake/hdf5")
 else()
-  set(PREFIX_PATH "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/${CONF_DIR}/share/cmake/hdf5")
+  set(PREFIX_PATH "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/share/cmake/hdf5")
 endif()
-# set(PREFIX_PATH "${PREFIX_PATH}\;${CTEST_SCRIPT_DIRECTORY}/lib/install/cgnslib-${CGNS_VER}/${CONF_DIR}")
 set(PREFIX_PATH "${PREFIX_PATH}\;${CTEST_SCRIPT_DIRECTORY}/lib/install/poco-${POCO_VER}/lib/cmake/Poco")
 
-# override LIBDIR to be consistent w/ hdf5 and cgns
+# override LIBDIR to be consistent w/ hdf5
 set(BUILD_OPTIONS 
 "-DCMAKE_INSTALL_PREFIX:PATH=${CTEST_BINARY_DIRECTORY}/INSTALL"
 "-DCMAKE_PREFIX_PATH:PATH=${PREFIX_PATH}"
 "-DCMAKE_INSTALL_LIBDIR:PATH=lib"
+"-DIRICLIB_FORTRAN_TESTING:BOOL=OFF"
 )
 
-CTEST_START("Experimental")
-CTEST_CONFIGURE(BUILD "${CTEST_BINARY_DIRECTORY}"
-                OPTIONS "${BUILD_OPTIONS}")
-CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}")
-if (WIN32)
-  set(cgns_dir "${CTEST_SCRIPT_DIRECTORY}/lib/install/cgnslib-${CGNS_VER}/${CONF_DIR}")
-  set(hdf5_dir "${CTEST_SCRIPT_DIRECTORY}/lib/install/hdf5-${HDF5_VER}/${CONF_DIR}")
-  set(unit_dir "${CTEST_BINARY_DIRECTORY}/unittests_cgnsfile/${CONF_DIR}")
-  set(lock_dir "${CTEST_BINARY_DIRECTORY}/unittest_lock/${CONF_DIR}")
-  set(mdfy_dir "${CTEST_BINARY_DIRECTORY}/unittest_cg_open_modify/${CONF_DIR}")
-  set(read_dir "${CTEST_BINARY_DIRECTORY}/unittest_cg_open_read/${CONF_DIR}")
+# Start
+ctest_start("Experimental")
 
-  set(poco_dir "${CTEST_SCRIPT_DIRECTORY}/lib/install/poco-${POCO_VER}")
-
-  # unittests_cgnsfile
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${unit_dir}
-#        )
-  # unittest_lock
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${lock_dir}
-#        )
-  # unittest_cg_open_modify
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${mdfy_dir}
-#        )
-  # unittest_cg_open_read
-#   file(COPY "${cgns_dir}/bin/cgnsdll.dll"
-#        DESTINATION ${read_dir}
-#        )
-
-  if(${CONF_DIR} STREQUAL "debug")
-    # unittests_cgnsfile
-    file(INSTALL "${hdf5_dir}/bin/hdf5_D.dll" "${hdf5_dir}/bin/szip_D.dll" "${hdf5_dir}/bin/zlib_D.dll"
-         DESTINATION ${unit_dir}
-     )
-    file(COPY "${poco_dir}/bin/PocoFoundationd.dll"
-        DESTINATION ${unit_dir}
-    )
-  #     # unittest_lock
-#     file(INSTALL "${hdf5_dir}/bin/hdf5_D.dll" "${hdf5_dir}/bin/szip_D.dll" "${hdf5_dir}/bin/zlib_D.dll"
-#          DESTINATION ${lock_dir}
-#          )
-#     # unittest_cg_open_modify
-#     file(INSTALL "${hdf5_dir}/bin/hdf5_D.dll" "${hdf5_dir}/bin/szip_D.dll" "${hdf5_dir}/bin/zlib_D.dll"
-#          DESTINATION ${mdfy_dir}
-#          )
-#     # unittest_cg_open_read
-#     file(INSTALL "${hdf5_dir}/bin/hdf5_D.dll" "${hdf5_dir}/bin/szip_D.dll" "${hdf5_dir}/bin/zlib_D.dll"
-#          DESTINATION ${read_dir}
-#          )
-  else()
-    # unittests_cgnsfile
-    file(INSTALL "${hdf5_dir}/bin/hdf5.dll" "${hdf5_dir}/bin/szip.dll" "${hdf5_dir}/bin/zlib.dll"
-         DESTINATION ${unit_dir}
-    )
-    file(COPY "${poco_dir}/bin/PocoFoundation.dll"
-        DESTINATION ${unit_dir}
-    )
-#     # unittest_lock
-#     file(INSTALL "${hdf5_dir}/bin/hdf5.dll" "${hdf5_dir}/bin/szip.dll" "${hdf5_dir}/bin/zlib.dll"
-#          DESTINATION ${unit_dir}
-#          )
-#     # unittest_cg_open_modify
-#     file(INSTALL "${hdf5_dir}/bin/hdf5.dll" "${hdf5_dir}/bin/szip.dll" "${hdf5_dir}/bin/zlib.dll"
-#          DESTINATION ${mdfy_dir}
-#          )
-#     # unittest_cg_open_read
-#     file(INSTALL "${hdf5_dir}/bin/hdf5.dll" "${hdf5_dir}/bin/szip.dll" "${hdf5_dir}/bin/zlib.dll"
-#          DESTINATION ${read_dir}
-#          )
-  endif()
+# Configure
+ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}"
+                OPTIONS "${BUILD_OPTIONS}"
+                CAPTURE_CMAKE_ERROR configure_error)
+if(configure_error)
+  message(FATAL_ERROR "*** Configure failed ***")
 endif()
-CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}" TARGET RUN_TESTS)
-CTEST_BUILD(BUILD "${CTEST_BINARY_DIRECTORY}" TARGET install)
+
+# Build
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}"
+            CAPTURE_CMAKE_ERROR build_error)
+if(build_error)
+  message(FATAL_ERROR "*** Build failed ***")
+endif()
+
+# Test
+ctest_test(RETURN_VALUE return_value
+           CAPTURE_CMAKE_ERROR test_error)
+if(test_error OR return_value)
+  message(FATAL_ERROR "*** Test failed ***")
+endif()
+
+# Install
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}"
+            TARGET install
+            CAPTURE_CMAKE_ERROR install_error)
+if(install_error)
+  message(FATAL_ERROR "*** Install failed ***")
+endif()

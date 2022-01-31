@@ -4,18 +4,24 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <PropertyGroup>
+    <!-- geos doesn't build correctly using ninja (on appveyor) -->
+    <GEOS_GENERATOR>"Visual Studio 16 2019"</GEOS_GENERATOR>
+    <GEOS_SGEN>vs2019-x64</GEOS_SGEN>
+  </PropertyGroup>
+
   <Target Name="geos-build" DependsOnTargets="geos-build-debug;geos-build-release" />
 
   <Target Name="geos-build-debug" Inputs="geos.targets;geos.cmake" Outputs="$(INSTALL_DIR)\geos-$(GEOS_VER)\debug\lib\geos.lib" DependsOnTargets="geos-src">
     <RemoveDir Directories="$(BUILD_DIR)\geos-$(GEOS_VER)\debug" />
     <RemoveDir Directories="$(INSTALL_DIR)\geos-$(GEOS_VER)\debug" />
-    <Exec Command="ctest -S geos.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-geos-debug.log" />
+    <Exec Command="ctest -S geos.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GEOS_GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(GEOS_SGEN)-geos-debug.log" />
   </Target>
 
   <Target Name="geos-build-release" Inputs="geos.targets;geos.cmake" Outputs="$(INSTALL_DIR)\geos-$(GEOS_VER)\release\lib\geos.lib" DependsOnTargets="geos-src">
     <RemoveDir Directories="$(BUILD_DIR)\geos-$(GEOS_VER)\release" />
     <RemoveDir Directories="$(INSTALL_DIR)\geos-$(GEOS_VER)\release" />
-    <Exec Command="ctest -S geos.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-geos-release.log" />
+    <Exec Command="ctest -S geos.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GEOS_GENERATOR) -C Release -VV -O $(LOG_DIR)\$(GEOS_SGEN)-geos-release.log" />
   </Target>
 
   <Target Name="geos-src" DependsOnTargets="geos-download" Condition="!Exists('$(SRC_DIR)\geos-$(GEOS_VER)')">
@@ -24,8 +30,8 @@
     <Move SourceFiles="$(SRC_DIR)\geos-$(GEOS_VER)\tools\astyle\ASLocalizer.cpp" DestinationFiles="$(SRC_DIR)\geos-$(GEOS_VER)\tools\astyle\ASLocalizer.cpp.orig" Condition="'$(GEOS_VER)' == '3.8.1'" />
     <Exec Command="copy /b $(TOP_DIR)\bom.txt+ASLocalizer.cpp.orig ASLocalizer.cpp" WorkingDirectory="$(SRC_DIR)\geos-$(GEOS_VER)\tools\astyle" Condition="'$(GEOS_VER)' == '3.8.1'" />
     <!-- 3.4.3 -->
-    <Copy SourceFiles="$(SRC_DIR)\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp.orig" Condition="'$(GEOS_VER)' == '3.4.3'" />
-    <Copy SourceFiles="patches\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-$(GEOS_VER)\src\operation\buffer\BufferOp.cpp" Condition="'$(GEOS_VER)' == '3.4.3'" />
+    <Copy SourceFiles="$(SRC_DIR)\geos-3.4.3\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-3.4.3\src\operation\buffer\BufferOp.cpp.orig" Condition="'$(GEOS_VER)' == '3.4.3'" />
+    <Copy SourceFiles="patches\geos-3.4.3\src\operation\buffer\BufferOp.cpp" DestinationFiles="$(SRC_DIR)\geos-3.4.3\src\operation\buffer\BufferOp.cpp" Condition="'$(GEOS_VER)' == '3.4.3'" />
   </Target>
 
   <Target Name="geos-download" Condition="!Exists('$(DOWNLOADS_DIR)\geos-$(GEOS_VER).tar.bz2')">

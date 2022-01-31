@@ -7,7 +7,6 @@ export GENERATOR SGEN
 
 ./build-vtk.sh
 ./build-hdf5.sh
-./build-cgnslib.sh
 ./build-iriclib.sh
 ./build-shapelib.sh
 ./build-qwt.sh

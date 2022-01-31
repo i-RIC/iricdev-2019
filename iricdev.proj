@@ -5,13 +5,11 @@
   <PropertyGroup>
     <VTK_MAJMIN>$([System.Text.RegularExpressions.Regex]::Match($(VTK_VER), `[0-9]\d*\.[0-9]\d*`))</VTK_MAJMIN>
     <HDF5_MAJMIN>$([System.Text.RegularExpressions.Regex]::Match($(HDF5_VER), `[0-9]\d*\.[0-9]\d*`))</HDF5_MAJMIN>
-    <CGNSLIB_MAJMIN>$([System.Text.RegularExpressions.Regex]::Match($(CGNSLIB_VER), `[0-9]\d*\.[0-9]\d*`))</CGNSLIB_MAJMIN>
   </PropertyGroup>
 
   <!-- all -->
   <ItemGroup>
     <all-targets Include="boost-src"/>
-    <all-targets Include="cgnslib-build"/>
     <all-targets Include="expat-build"/>
     <all-targets Include="gdal-build"/>
     <all-targets Include="geos-build"/>
@@ -35,7 +33,6 @@
 
   <!-- all release except vtk-build-release(36:21)-->
   <ItemGroup>
-    <appveyor-release-targets Include="cgnslib-build-release"/>
     <appveyor-release-targets Include="expat-build-release"/>
     <appveyor-release-targets Include="gdal-build-release"/>
     <appveyor-release-targets Include="geos-build-release"/>
@@ -45,7 +42,7 @@
     <appveyor-release-targets Include="netcdf-c-build-release"/>
     <appveyor-release-targets Include="openssl-build-release"/>
     <appveyor-release-targets Include="poco-build-release"/>
-    <appveyor-release-targets Include="proj-build"/>
+    <appveyor-release-targets Include="proj-build-release"/>
     <appveyor-release-targets Include="qwt-build"/>
     <appveyor-release-targets Include="shapelib-build-release"/>
     <appveyor-release-targets Include="udunits-build-release"/>
@@ -58,7 +55,6 @@
 
   <!-- all debug except vtk-build-debug(36:21)-->
   <ItemGroup>
-    <appveyor-debug-targets Include="cgnslib-build-debug"/>
     <appveyor-debug-targets Include="expat-build-debug"/>
     <appveyor-debug-targets Include="gdal-build-debug"/>
     <appveyor-debug-targets Include="geos-build-debug"/>
@@ -68,6 +64,7 @@
     <appveyor-debug-targets Include="netcdf-c-build-debug"/>
     <appveyor-debug-targets Include="openssl-build-debug"/>
     <appveyor-debug-targets Include="poco-build-debug"/>
+    <appveyor-debug-targets Include="proj-build-debug"/>
     <appveyor-debug-targets Include="shapelib-build-debug"/>
     <appveyor-debug-targets Include="udunits-build-debug"/>
     <appveyor-debug-targets Include="yaml-cpp-build-debug"/>
@@ -77,20 +74,9 @@
     <Exec Command="create-files.cmd" />
   </Target>
 
-  <!-- all release adf-->
-  <Target Name="appveyor-adf-release" DependsOnTargets="iriclib-adf-build-release;cgnslib-adf-build-release">
-    <Exec Command="create-adf-files.cmd" />
-  </Target>
-
-  <!-- all debug adf-->
-  <Target Name="appveyor-adf-debug" DependsOnTargets="iriclib-adf-build-debug;cgnslib-adf-build-debug">
-    <Exec Command="create-adf-files.cmd" />
-  </Target>
-
   <!-- all downloads -->
   <ItemGroup>
     <download-targets Include="boost-download"/>
-    <download-targets Include="cgnslib-download"/>
     <download-targets Include="expat-download"/>
     <download-targets Include="gdal-download"/>
     <download-targets Include="geos-download"/>
@@ -144,9 +130,6 @@
   <!-- iriclib -->
   <Import Project="iriclib.targets" />
 
-  <!-- cgnslib -->
-  <Import Project="cgnslib.targets" />
-
   <!-- hdf5 -->
   <Import Project="hdf5.targets" />
 
@@ -177,8 +160,6 @@
     <Message Text="BOOST_UVER=$(BOOST_UVER)" />
     <Message Text="BOOST_VER=$(BOOST_VER)" />
     <Message Text="BUILD_TOOLS=$(BUILD_TOOLS)" />
-    <Message Text="CGNSLIB_MAJMIN=$(CGNSLIB_MAJMIN)" />
-    <Message Text="CGNSLIB_VER=$(CGNSLIB_VER)" />
     <Message Text="CURL=$(CURL)" />
     <Message Text="EXPAT_VER=$(EXPAT_VER)" />
     <Message Text="GDAL_VER=$(GDAL_VER)" />
@@ -190,6 +171,7 @@
     <Message Text="IRICLIB_ADF_SVER=$(IRICLIB_ADF_SVER)" />
     <Message Text="IRICLIB_ADF_VER=$(IRICLIB_ADF_VER)" />
     <Message Text="NETCDF_VER=$(NETCDF_VER)" />
+    <Message Text="POCO_VER=$(POCO_VER)" />
     <Message Text="PROJ_VER=$(PROJ_VER)" />
     <Message Text="QT_CMAKE_DIR=$(QT_CMAKE_DIR)" />
     <Message Text="QT_DIR=$(QT_DIR)" />

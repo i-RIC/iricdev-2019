@@ -2,10 +2,8 @@
 **/logs
 **/downloads
 dirExt.prop
-dirExt-adf.prop
 dirExt-debug-vtk-leaks.prop
 lib
 paths.pri
-paths-adf.pri
 paths-debug-vtk-leaks.pri
 programs.prop
