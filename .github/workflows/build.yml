@@ -64,6 +64,7 @@ jobs:
       run: |
         call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        cd ${{github.workspace}}
         msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
 
     - name: Cache boost
@@ -276,19 +277,21 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
 
-    # - name: Cache vtk
-    #   id: cache-vtk
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
-    #     key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+    - name: Cache vtk
+      id: cache-vtk
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
+        key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
 
-    # - name: Build vtk
-    #   if: steps.cache-vtk.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
+    - name: Build vtk
+      if: steps.cache-vtk.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        cd ${{github.workspace}}
+        msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
 
     - name: Cache yaml
       id: cache-yaml
@@ -303,8 +306,6 @@ jobs:
       run: |
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:yaml-cpp-build iricdev.proj
-
-    # Still need to install Qt and build qwt and VTK
 
     # - name: Archive builds
     #   uses: actions/upload-artifact@v2
