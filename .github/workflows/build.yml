@@ -310,7 +310,7 @@ jobs:
     - name: Create iric-vs2019-build-cache.7z
       run: |
         Push-Location lib
-        7z a iric-vs2019-build-cache.7z .\install '-x!.\install\boost-${{env.BOOST_VER}}' '-x!.\install\vtk-${{env.VTK_VER}}'
+        7z a iric-vs2019-build-cache.7z install '-x!install\boost-${{env.BOOST_VER}}' '-x!install\vtk-${{env.VTK_VER}}\debug-vtk-leaks'
         Pop-Location
 
     - name: Create release
@@ -334,7 +334,7 @@ jobs:
         $create = @{
           "tag_name"         = "$tag_name"
           "target_commitish" = "$target_commitish"
-          "name"             = "iricdev " + $target_commitish
+          "name"             = "iricdev " + $tag_name
           "draft"            = $true
         }
         $create_json = $create | ConvertTo-Json
