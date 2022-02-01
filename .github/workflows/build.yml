@@ -64,7 +64,7 @@ jobs:
       run: |
         call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cd ${{github.workspace}}
+        cd /D ${{github.workspace}}
         msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
 
     - name: Cache boost
@@ -290,7 +290,7 @@ jobs:
       run: |
         call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cd ${{github.workspace}}
+        cd /D ${{github.workspace}}
         msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
 
     - name: Cache yaml
