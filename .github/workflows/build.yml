@@ -41,7 +41,7 @@ jobs:
 
     - name: debug
       run: |
-        call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
+        $env:PATH="C:\Qt\5.14.2\msvc2017_64\bin;$env:PATH"
         Write-Output "GENERATOR=$env:GENERATOR"
         Write-Output "SGEN=$env:SGEN"
         Get-Command msbuild
