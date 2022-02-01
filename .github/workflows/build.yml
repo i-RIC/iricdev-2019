@@ -3,13 +3,12 @@ name: build
 on:
   push:
     branches:
-      - 2019-actions
+      - 2019
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   GENERATOR: Ninja Multi-Config
   SGEN: ninja-x64
-
 
 jobs:
   build:
