@@ -422,6 +422,32 @@ $component_groups += @(
     }
 )
 
+# for iricdev install only 5.14.2 x64
+
+foreach($componentGroup in $component_groups) {
+    if ($componentGroup.version) {
+        if ($componentGroup.version -and ($componentGroup.version -ne "5.14.2")) {
+            continue
+        }
+        foreach($component in $componentGroup.components) {
+            if ($component -match "mingw" -or $component -match "win32_") {
+                continue
+            }
+            Install-QtComponent -Version $componentGroup.version -Name $component -Path $installDir
+        }
+        ConfigureQtVersion $installDir $componentGroup.version
+    } else {
+        foreach($component in $componentGroup.components) {
+            if ($component -match "mingw") {
+                continue
+            }
+            Install-QtComponent -Id $component -Path $installDir
+        }
+    }
+}
+Write-Host "Qt 5.14.2 installed" -ForegroundColor Green
+return
+
 # install components
 foreach($componentGroup in $component_groups) {
     if ($componentGroup.version) {
