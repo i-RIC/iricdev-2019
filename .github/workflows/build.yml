@@ -321,7 +321,7 @@ jobs:
         $tag_name = ((Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmss'))
 
         # store commit
-        $target_commitish = ${{github.sha}}
+        $target_commitish = "${{github.sha}}"
 
         # create headers dictionary
         $h = @{"Authorization" = "token ${{secrets.GITHUB_TOKEN}}"}
