@@ -29,7 +29,7 @@ set YAML_CPP_VER=0.6.3
 :: replace . with _
 ::
 set BOOST_UVER=%BOOST_VER:.=_%
-set EXPAT_UVER=R_%EXPAT_VER:.=_%
+set EXPAT_UVER=%EXPAT_VER:.=_%
 set OPENSSL_UVER=%OPENSSL_VER:.=_%
 if NOT defined BUILD_TOOLS  set BUILD_TOOLS="OFF"
 
