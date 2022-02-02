@@ -27,7 +27,7 @@
     <MakeDir Directories="$(DOWNLOADS_DIR)" />
     <Message Text="Downloading expat-$(EXPAT_VER).zip" />
     <Exec Command="$(CURL) https://github.com/libexpat/libexpat/archive/R_$(EXPAT_UVER).zip" WorkingDirectory="$(DOWNLOADS_DIR)" />
-    <Move SourceFiles="$(DOWNLOADS_DIR)\$(EXPAT_UVER).zip" DestinationFiles="$(DOWNLOADS_DIR)\expat-$(EXPAT_VER).zip" />
+    <Move SourceFiles="$(DOWNLOADS_DIR)\R_$(EXPAT_UVER).zip" DestinationFiles="$(DOWNLOADS_DIR)\expat-$(EXPAT_VER).zip" />
   </Target>
 
 </Project>
