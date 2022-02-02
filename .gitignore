@@ -3,7 +3,8 @@
 **/downloads
 dirExt.prop
 dirExt-debug-vtk-leaks.prop
-lib
+lib/
 paths.pri
 paths-debug-vtk-leaks.pri
 programs.prop
+lib.*/
