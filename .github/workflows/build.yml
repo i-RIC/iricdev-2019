@@ -49,6 +49,8 @@ jobs:
         cmake --version
         Get-Command qmake
         qmake --version
+        Get-Command tclsh
+        tclsh --version
 
     - name: Cache qwt
       id: cache-qwt
