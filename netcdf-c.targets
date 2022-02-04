@@ -7,6 +7,7 @@
   <Target Name="netcdf-c-clean" DependsOnTargets="hdf5-clean">
     <RemoveDir Directories="lib\build\netcdf-c-$(NETCDF_VER)" />
     <RemoveDir Directories="$(SRC_DIR)\netcdf-c-$(NETCDF_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\netcdf-c-$(NETCDF_VER).zip" />
   </Target>
 
   <Target Name="netcdf-c-build" DependsOnTargets="netcdf-c-build-debug;netcdf-c-build-release" />
