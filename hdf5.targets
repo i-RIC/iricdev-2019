@@ -10,6 +10,11 @@
     <HDF5_GENERATOR_NO_QUOTES>Visual Studio 16 2019</HDF5_GENERATOR_NO_QUOTES>
   </PropertyGroup>
 
+  <Target Name="hdf5-clean">
+    <RemoveDir Directories="lib\build\hdf5-$(HDF5_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\CMake-hdf5-$(HDF5_VER)" />
+  </Target>
+
   <Target Name="hdf5-build" DependsOnTargets="hdf5-build-debug;hdf5-build-release" />
 
   <Target Name="hdf5-build-debug" Inputs="hdf5.targets;hdf5.cmake" Outputs="$(INSTALL_DIR)\hdf5-$(HDF5_VER)\lib\hdf5_D.lib" DependsOnTargets="hdf5-src">

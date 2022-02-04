@@ -66,6 +66,7 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         cd /D ${{github.workspace}}
         msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:qwt-clean iricdev.proj
 
     - name: Cache boost
       id: cache-boost
@@ -80,6 +81,7 @@ jobs:
       run: |
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:boost-src iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:boost-clean iricdev.proj
 
     - name: Cache hdf5
       id: cache-hdf5
@@ -94,276 +96,285 @@ jobs:
       run: |
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:hdf5-clean iricdev.proj
 
-    - name: Cache sqlite
-      id: cache-sqlite
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/sqlite-src-3320300
-        key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
-
-    - name: Build sqlite
-      if: steps.cache-sqlite.outputs.cache-hit != 'true'
+    - name: Check so far
       shell: cmd
       run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
+        dir lib\build
+        dir lib\src
+        dir lib\install
+        dir /s lib\install
 
-    - name: Cache netcdf-c
-      id: cache-netcdf-c
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
-        key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
+    # - name: Cache sqlite
+    #   id: cache-sqlite
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/sqlite-src-3320300
+    #     key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
 
-    - name: Build netcdf-c         # depends on hdf5
-      if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
+    # - name: Build sqlite
+    #   if: steps.cache-sqlite.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
 
-    - name: Cache libtiff
-      id: cache-libtiff
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
-        key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
+    # - name: Cache netcdf-c
+    #   id: cache-netcdf-c
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
+    #     key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
 
-    - name: Build libtiff
-      if: steps.cache-libtiff.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
+    # - name: Build netcdf-c         # depends on hdf5
+    #   if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
 
-    - name: Cache poco
-      id: cache-poco
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
-        key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
+    # - name: Cache libtiff
+    #   id: cache-libtiff
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
+    #     key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
 
-    - name: Build poco
-      if: steps.cache-poco.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
+    # - name: Build libtiff
+    #   if: steps.cache-libtiff.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
 
-    - name: Cache expat
-      id: cache-expat
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
-        key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
+    # - name: Cache poco
+    #   id: cache-poco
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
+    #     key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
 
-    - name: Build expat
-      if: steps.cache-expat.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
+    # - name: Build poco
+    #   if: steps.cache-poco.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
 
-    - name: Cache udunits
-      id: cache-udunits
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
-        key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
+    # - name: Cache expat
+    #   id: cache-expat
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
+    #     key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
-    - name: Build udunits
-      if: steps.cache-udunits.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
+    # - name: Build expat
+    #   if: steps.cache-expat.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
 
-    - name: Cache shapelib
-      id: cache-shapelib
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
-        key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
+    # - name: Cache udunits
+    #   id: cache-udunits
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
+    #     key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
 
-    - name: Build shapelib
-      if: steps.cache-shapelib.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
+    # - name: Build udunits
+    #   if: steps.cache-udunits.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
 
-    - name: Cache openssl
-      id: cache-openssl
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
-        key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
+    # - name: Cache shapelib
+    #   id: cache-shapelib
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
+    #     key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
 
-    - name: Build openssl
-      if: steps.cache-openssl.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:openssl-build iricdev.proj
+    # - name: Build shapelib
+    #   if: steps.cache-shapelib.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
 
-    - name: Cache geos
-      id: cache-geos
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
-        key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
+    # - name: Cache openssl
+    #   id: cache-openssl
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
+    #     key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
 
-    - name: Build geos
-      if: steps.cache-geos.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:geos-build iricdev.proj
+    # - name: Build openssl
+    #   if: steps.cache-openssl.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:openssl-build iricdev.proj
 
-    - name: Cache libpng
-      id: cache-libpng
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
-        key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
+    # - name: Cache geos
+    #   id: cache-geos
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
+    #     key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
 
-    - name: Build libpng           # depends on hdf5
-      if: steps.cache-libpng.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
+    # - name: Build geos
+    #   if: steps.cache-geos.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:geos-build iricdev.proj
 
-    - name: Cache proj
-      id: cache-proj
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
-        key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
+    # - name: Cache libpng
+    #   id: cache-libpng
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
+    #     key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
 
-    - name: Build proj             # depends on sqlite libtiff
-      if: steps.cache-proj.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
+    # - name: Build libpng           # depends on hdf5
+    #   if: steps.cache-libpng.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
 
-    - name: Cache gdal
-      id: cache-gdal
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
-        key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
+    # - name: Cache proj
+    #   id: cache-proj
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
+    #     key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
 
-    - name: Build gdal             # depends on netcdf-c and proj
-      if: steps.cache-gdal.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:gdal-build iricdev.proj
+    # - name: Build proj             # depends on sqlite libtiff
+    #   if: steps.cache-proj.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
 
-    - name: Cache iriclib
-      id: cache-iriclib
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
-        key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
+    # - name: Cache gdal
+    #   id: cache-gdal
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
+    #     key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
 
-    - name: Build iriclib          # depends on hdf5 and poco
-      if: steps.cache-iriclib.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
+    # - name: Build gdal             # depends on netcdf-c and proj
+    #   if: steps.cache-gdal.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:gdal-build iricdev.proj
 
-    - name: Cache vtk
-      id: cache-vtk
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
-        key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+    # - name: Cache iriclib
+    #   id: cache-iriclib
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
+    #     key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
 
-    - name: Build vtk
-      if: steps.cache-vtk.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cd /D ${{github.workspace}}
-        msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
+    # - name: Build iriclib          # depends on hdf5 and poco
+    #   if: steps.cache-iriclib.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
 
-    - name: Cache yaml
-      id: cache-yaml
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/lib/install/yaml-cpp-${{env.YAML_CPP_VER}}
-        key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
+    # - name: Cache vtk
+    #   id: cache-vtk
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
+    #     key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
 
-    - name: Build yaml
-      if: steps.cache-yaml.outputs.cache-hit != 'true'
-      shell: cmd
-      run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        msbuild /noLogo /maxCpuCount /target:yaml-cpp-build iricdev.proj
+    # - name: Build vtk
+    #   if: steps.cache-vtk.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     cd /D ${{github.workspace}}
+    #     msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
 
-    - name: Create iric-vs2019-build-cache.7z
-      run: |
-        Push-Location lib
-        7z a iric-vs2019-build-cache.7z install '-x!install\boost-${{env.BOOST_VER}}' '-x!install\vtk-${{env.VTK_VER}}\debug-vtk-leaks'
-        Pop-Location
+    # - name: Cache yaml
+    #   id: cache-yaml
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/lib/install/yaml-cpp-${{env.YAML_CPP_VER}}
+    #     key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
 
-    - name: Create release
-      env:
-        releases_url: ${{github.api_url}}/repos/${{github.repository}}/releases
-      run: |
-        # create tag
-        $tag_name = ((Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmss'))
+    # - name: Build yaml
+    #   if: steps.cache-yaml.outputs.cache-hit != 'true'
+    #   shell: cmd
+    #   run: |
+    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+    #     msbuild /noLogo /maxCpuCount /target:yaml-cpp-build iricdev.proj
 
-        # store commit
-        $target_commitish = "${{github.sha}}"
+    # - name: Create iric-vs2019-build-cache.7z
+    #   run: |
+    #     Push-Location lib
+    #     7z a iric-vs2019-build-cache.7z install '-x!install\boost-${{env.BOOST_VER}}' '-x!install\vtk-${{env.VTK_VER}}\debug-vtk-leaks'
+    #     Pop-Location
 
-        # create headers dictionary
-        $h = @{"Authorization" = "token ${{secrets.GITHUB_TOKEN}}"}
-        $releases_url = "${{env.releases_url}}"
-        # create release
-        # POST /repos/{owner}/{repo}/releases
-        # see https://docs.github.com/en/rest/reference/repos#create-a-release
-        # see https://docs.github.com/ja/rest/reference/repos#create-a-release
-        #
-        $create = @{
-          "tag_name"         = "$tag_name"
-          "target_commitish" = "$target_commitish"
-          "name"             = "iricdev " + $tag_name
-          "draft"            = $true
-        }
-        $create_json = $create | ConvertTo-Json
-        $release = Invoke-WebRequest -Uri $releases_url -Headers $h -Method POST -Body $create_json
-        # upload artifact (asset)
-        # POST /repos/{owner}/{repo}/releases/{release_id}/assets
-        # see https://docs.github.com/en/rest/reference/repos#upload-a-release-asset
-        # see https://docs.github.com/ja/rest/reference/repos#upload-a-release-asset
-        #
-        $upload_uri = ($release.Content | ConvertFrom-Json).upload_url
-        if (! ($upload_uri -match  "(.*)\{\?name,label\}") ) {
-          # expecting URI{?name,label}
-          # ie https://uploads.github.com/repos/scharlton2/iricdev-2019/releases/24058628/assets{?name,label}
-          throw "Bad upload_url"
-        }
-        $upload_uri = $Matches[1] + "?name=iric-vs2019-build-cache.7z"
-        $h["Content-type"] = "application/x-7z-compressed"
-        $bytes = [System.IO.File]::ReadAllBytes("lib\iric-vs2019-build-cache.7z")
-        $upload = Invoke-WebRequest -Uri $upload_uri -Headers $h -Method POST -Body $bytes
-        # update release
-        # PATCH /repos/{owner}/{repo}/releases/{release_id}
-        # see https://docs.github.com/en/rest/reference/repos#update-a-release
-        # see https://docs.github.com/ja/rest/reference/repos#update-a-release
-        #
-        $release_id = ($release.Content | ConvertFrom-Json).id
-        $h.Remove("Content-type")
-        $update = @{ "draft" = $false }
-        $update_json = $update | ConvertTo-Json
-        $release = Invoke-WebRequest -Uri "$releases_url/$release_id" -Headers $h -Method PATCH -Body $update_json
-        # display download url
-        Write-Output "$((($release.Content | ConvertFrom-Json).assets).browser_download_url)"
-        Get-FileHash "lib\iric-vs2019-build-cache.7z"
+    # - name: Create release
+    #   env:
+    #     releases_url: ${{github.api_url}}/repos/${{github.repository}}/releases
+    #   run: |
+    #     # create tag
+    #     $tag_name = ((Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmss'))
+
+    #     # store commit
+    #     $target_commitish = "${{github.sha}}"
+
+    #     # create headers dictionary
+    #     $h = @{"Authorization" = "token ${{secrets.GITHUB_TOKEN}}"}
+    #     $releases_url = "${{env.releases_url}}"
+    #     # create release
+    #     # POST /repos/{owner}/{repo}/releases
+    #     # see https://docs.github.com/en/rest/reference/repos#create-a-release
+    #     # see https://docs.github.com/ja/rest/reference/repos#create-a-release
+    #     #
+    #     $create = @{
+    #       "tag_name"         = "$tag_name"
+    #       "target_commitish" = "$target_commitish"
+    #       "name"             = "iricdev " + $tag_name
+    #       "draft"            = $true
+    #     }
+    #     $create_json = $create | ConvertTo-Json
+    #     $release = Invoke-WebRequest -Uri $releases_url -Headers $h -Method POST -Body $create_json
+    #     # upload artifact (asset)
+    #     # POST /repos/{owner}/{repo}/releases/{release_id}/assets
+    #     # see https://docs.github.com/en/rest/reference/repos#upload-a-release-asset
+    #     # see https://docs.github.com/ja/rest/reference/repos#upload-a-release-asset
+    #     #
+    #     $upload_uri = ($release.Content | ConvertFrom-Json).upload_url
+    #     if (! ($upload_uri -match  "(.*)\{\?name,label\}") ) {
+    #       # expecting URI{?name,label}
+    #       # ie https://uploads.github.com/repos/scharlton2/iricdev-2019/releases/24058628/assets{?name,label}
+    #       throw "Bad upload_url"
+    #     }
+    #     $upload_uri = $Matches[1] + "?name=iric-vs2019-build-cache.7z"
+    #     $h["Content-type"] = "application/x-7z-compressed"
+    #     $bytes = [System.IO.File]::ReadAllBytes("lib\iric-vs2019-build-cache.7z")
+    #     $upload = Invoke-WebRequest -Uri $upload_uri -Headers $h -Method POST -Body $bytes
+    #     # update release
+    #     # PATCH /repos/{owner}/{repo}/releases/{release_id}
+    #     # see https://docs.github.com/en/rest/reference/repos#update-a-release
+    #     # see https://docs.github.com/ja/rest/reference/repos#update-a-release
+    #     #
+    #     $release_id = ($release.Content | ConvertFrom-Json).id
+    #     $h.Remove("Content-type")
+    #     $update = @{ "draft" = $false }
+    #     $update_json = $update | ConvertTo-Json
+    #     $release = Invoke-WebRequest -Uri "$releases_url/$release_id" -Headers $h -Method PATCH -Body $update_json
+    #     # display download url
+    #     Write-Output "$((($release.Content | ConvertFrom-Json).assets).browser_download_url)"
+    #     Get-FileHash "lib\iric-vs2019-build-cache.7z"

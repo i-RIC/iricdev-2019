@@ -4,6 +4,11 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="qwt-clean">
+    <RemoveDir Directories="$(SRC_DIR)\qwt-$(QWT_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\qwt-$(QWT_VER).zip" />
+  </Target>
+
   <Target Name="qwt-build" DependsOnTargets="qwt-src" Condition="!Exists('$(INSTALL_DIR)\qwt-$(QWT_VER)\lib')">
     <PropertyGroup>
       <topdir>$(MSBuildProjectDirectory)</topdir>

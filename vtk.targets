@@ -4,7 +4,7 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
-  <Target Name="vtk-build" DependsOnTargets="vtk-build-debug;vtk-build-release;vtk-build-debug-leaks" />
+  <Target Name="vtk-build" DependsOnTargets="vtk-build-debug;vtk-build-release" />
 
   <Target Name="vtk-build-release" Inputs="vtk.targets;vtk.cmake" Outputs="$(INSTALL_DIR)\vtk-$(VTK_VER)\release\lib\vtkGUISupportQtOpenGL-$(VTK_MAJMIN).lib" DependsOnTargets="vtk-src">
     <RemoveDir Directories="$(BUILD_DIR)\vtk-$(VTK_VER)\release" />
