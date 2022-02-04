@@ -12,6 +12,11 @@
     <GENERATOR_NO_QUOTES>$([System.String]::Copy($(GENERATOR)).Replace('"','') )</GENERATOR_NO_QUOTES>
   </PropertyGroup>
 
+  <Target Name="poco-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\poco-$(POCO_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\poco-$(POCO_VER)" />
+  </Target>
+
   <Target Name="poco-build" DependsOnTargets="poco-build-debug;poco-build-release" />
 
   <!-- Both debug and release versions are installed to the same directory -->

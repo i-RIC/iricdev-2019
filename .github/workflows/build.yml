@@ -98,6 +98,67 @@ jobs:
         msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
         msbuild /noLogo /maxCpuCount /target:hdf5-clean iricdev.proj
 
+    - name: Cache sqlite
+      id: cache-sqlite
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/sqlite-src-3320300
+        key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
+
+    - name: Build sqlite
+      if: steps.cache-sqlite.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:sqlite-clean iricdev.proj
+
+    - name: Cache netcdf-c
+      id: cache-netcdf-c
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
+        key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
+
+    - name: Build netcdf-c         # depends on hdf5
+      if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:netcdf-c-clean iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:hdf5-clean iricdev.proj
+
+    - name: Cache libtiff
+      id: cache-libtiff
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
+        key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
+
+    - name: Build libtiff
+      if: steps.cache-libtiff.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:libtiff-clean iricdev.proj
+
+    - name: Cache poco
+      id: cache-poco
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
+        key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
+
+    - name: Build poco
+      if: steps.cache-poco.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:poco-clean iricdev.proj
+
     - name: Check so far
       shell: cmd
       run: |
@@ -105,62 +166,6 @@ jobs:
         dir lib\src
         dir lib\install
         dir /s lib\install
-
-    # - name: Cache sqlite
-    #   id: cache-sqlite
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/sqlite-src-3320300
-    #     key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
-
-    # - name: Build sqlite
-    #   if: steps.cache-sqlite.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
-
-    # - name: Cache netcdf-c
-    #   id: cache-netcdf-c
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
-    #     key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
-
-    # - name: Build netcdf-c         # depends on hdf5
-    #   if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
-
-    # - name: Cache libtiff
-    #   id: cache-libtiff
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
-    #     key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
-
-    # - name: Build libtiff
-    #   if: steps.cache-libtiff.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
-
-    # - name: Cache poco
-    #   id: cache-poco
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
-    #     key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
-
-    # - name: Build poco
-    #   if: steps.cache-poco.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
 
     # - name: Cache expat
     #   id: cache-expat

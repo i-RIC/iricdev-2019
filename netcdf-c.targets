@@ -4,6 +4,11 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="netcdf-c-clean">
+    <RemoveDir Directories="lib\build\netcdf-c-$(NETCDF_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\netcdf-c-$(NETCDF_VER)" />
+  </Target>
+
   <Target Name="netcdf-c-build" DependsOnTargets="netcdf-c-build-debug;netcdf-c-build-release" />
 
   <Target Name="netcdf-c-build-debug" Inputs="netcdf-c.targets;netcdf-c.cmake" Outputs="$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\debug\lib\netcdf.lib" DependsOnTargets="netcdf-c-src;hdf5-build-debug">

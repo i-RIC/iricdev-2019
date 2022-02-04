@@ -4,6 +4,11 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="libtiff-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\tiff-$(LIBTIFF_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\tiff-$(LIBTIFF_VER)" />
+  </Target>
+
   <Target Name="libtiff-build" DependsOnTargets="libtiff-build-debug;libtiff-build-release" />
 
   <Target Name="libtiff-build-release" Inputs="libtiff.targets;libtiff.cmake" Outputs="$(INSTALL_DIR)\tiff-$(LIBTIFF_VER)\release\lib\tiff.lib" DependsOnTargets="libtiff-src">
