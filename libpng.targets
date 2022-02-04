@@ -4,23 +4,29 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="libpng-clean" DependsOnTargets="hdf5-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\libpng-$(LIBPNG_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\libpng-$(LIBPNG_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\libpng-$(LIBPNG_VER).tar.xz" />
+  </Target>
+
   <Target Name="libpng-build" DependsOnTargets="libpng-build-debug;libpng-build-release" />
 
-  <Target Name="libpng-build-debug" DependsOnTargets="libpng-src;hdf5-build-debug" Condition="!Exists('$(INSTALL_DIR)\libpng-$(LIBPNG_VER)\debug')">
+  <Target Name="libpng-build-debug" Inputs="$(INSTALL_DIR)\hdf5-$(HDF5_VER)\lib\hdf5_D.lib" Outputs="$(INSTALL_DIR)\libpng-$(LIBPNG_VER)\debug\lib\libpng16d.lib" DependsOnTargets="libpng-src">
     <Exec Command="ctest -S libpng.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-libpng-debug.log"/>
   </Target>
 
-  <Target Name="libpng-build-release" DependsOnTargets="libpng-src;hdf5-build-release" Condition="!Exists('$(INSTALL_DIR)\libpng-$(LIBPNG_VER)\release')">
+  <Target Name="libpng-build-release" Inputs="$(INSTALL_DIR)\hdf5-$(HDF5_VER)\lib\hdf5.lib" Outputs="$(INSTALL_DIR)\libpng-$(LIBPNG_VER)\release\lib\libpng16.lib" DependsOnTargets="libpng-src">
     <Exec Command="ctest -S libpng.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-libpng-release.log"/>
   </Target>
 
   <Target Name="libpng-src" DependsOnTargets="libpng-download" Condition="!Exists('$(SRC_DIR)\libpng-$(LIBPNG_VER)')">
-    <Exec Command="7z x .\libpng-$(LIBPNG_VER).tar.xz -so | 7z x -si -ttar -o$(SRC_DIR)"/>
+    <Exec Command="7z x $(DOWNLOADS_DIR)\libpng-$(LIBPNG_VER).tar.xz -so | 7z x -si -ttar -o$(SRC_DIR)"/>
   </Target>
 
-  <Target Name="libpng-download" Condition="!Exists('libpng-$(LIBPNG_VER).tar.xz')">
+  <Target Name="libpng-download" Condition="!Exists('$(DOWNLOADS_DIR)\libpng-$(LIBPNG_VER).tar.xz')">
     <Message Text="Downloading libpng-$(LIBPNG_VER).tar.xz" />
-    <Exec Command="$(CURL) https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz" />
+    <Exec Command="$(CURL) https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz" WorkingDirectory="$(DOWNLOADS_DIR)" />
   </Target>
 
 </Project>

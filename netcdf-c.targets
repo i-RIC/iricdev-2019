@@ -4,7 +4,7 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
-  <Target Name="netcdf-c-clean">
+  <Target Name="netcdf-c-clean" DependsOnTargets="hdf5-clean">
     <RemoveDir Directories="lib\build\netcdf-c-$(NETCDF_VER)" />
     <RemoveDir Directories="$(SRC_DIR)\netcdf-c-$(NETCDF_VER)" />
   </Target>

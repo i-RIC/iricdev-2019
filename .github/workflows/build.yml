@@ -127,7 +127,6 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
         msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
         msbuild /noLogo /maxCpuCount /target:netcdf-c-clean iricdev.proj
-        msbuild /noLogo /maxCpuCount /target:hdf5-clean iricdev.proj
 
     - name: Cache libtiff
       id: cache-libtiff
@@ -181,7 +180,7 @@ jobs:
         path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
         key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
 
-    - name: Build udunits
+    - name: Build udunits          # depends on expat
       if: steps.cache-udunits.outputs.cache-hit != 'true'
       shell: cmd
       run: |
@@ -204,6 +203,51 @@ jobs:
         msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
         msbuild /noLogo /maxCpuCount /target:shapelib-clean iricdev.proj
 
+    - name: Cache openssl
+      id: cache-openssl
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
+        key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
+
+    - name: Build openssl
+      if: steps.cache-openssl.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:openssl-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:openssl-clean iricdev.proj
+
+    - name: Cache geos
+      id: cache-geos
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
+        key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
+
+    - name: Build geos
+      if: steps.cache-geos.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:geos-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:geos-clean iricdev.proj
+
+    - name: Cache libpng
+      id: cache-libpng
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
+        key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
+
+    - name: Build libpng           # depends on hdf5
+      if: steps.cache-libpng.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:libpng-clean iricdev.proj
+
     - name: Check so far
       shell: cmd
       run: |
@@ -212,49 +256,6 @@ jobs:
         dir lib\src
         dir lib\install
         dir /s lib\install
-
-    # - name: Cache openssl
-    #   id: cache-openssl
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
-    #     key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
-
-    # - name: Build openssl
-    #   if: steps.cache-openssl.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:openssl-build iricdev.proj
-
-    # - name: Cache geos
-    #   id: cache-geos
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
-    #     key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
-
-    # - name: Build geos
-    #   if: steps.cache-geos.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:geos-build iricdev.proj
-
-    # - name: Cache libpng
-    #   id: cache-libpng
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
-    #     key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
-
-    # - name: Build libpng           # depends on hdf5
-    #   if: steps.cache-libpng.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
-
     # - name: Cache proj
     #   id: cache-proj
     #   uses: actions/cache@v2

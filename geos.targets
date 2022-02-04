@@ -10,6 +10,12 @@
     <GEOS_SGEN>vs2019-x64</GEOS_SGEN>
   </PropertyGroup>
 
+  <Target Name="geos-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\geos-$(GEOS_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\geos-$(GEOS_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\geos-$(GEOS_VER).tar.bz2" />
+  </Target>
+
   <Target Name="geos-build" DependsOnTargets="geos-build-debug;geos-build-release" />
 
   <Target Name="geos-build-debug" Inputs="geos.targets;geos.cmake" Outputs="$(INSTALL_DIR)\geos-$(GEOS_VER)\debug\lib\geos.lib" DependsOnTargets="geos-src">

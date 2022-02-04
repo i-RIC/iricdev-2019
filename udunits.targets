@@ -4,7 +4,7 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
-  <Target Name="udunits-clean">
+  <Target Name="udunits-clean" DependsOnTargets="expat-clean">
     <RemoveDir Directories="$(BUILD_DIR)\udunits-$(UDUNITS_VER)" />
     <RemoveDir Directories="$(SRC_DIR)\udunits-$(UDUNITS_VER)" />
     <Delete Files="$(DOWNLOADS_DIR)\udunits-$(UDUNITS_VER).zip" />
