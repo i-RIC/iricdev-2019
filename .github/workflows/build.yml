@@ -159,55 +159,59 @@ jobs:
         msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
         msbuild /noLogo /maxCpuCount /target:poco-clean iricdev.proj
 
+    - name: Cache expat
+      id: cache-expat
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
+        key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
+
+    - name: Build expat
+      if: steps.cache-expat.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:expat-clean iricdev.proj
+
+    - name: Cache udunits
+      id: cache-udunits
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
+        key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
+
+    - name: Build udunits
+      if: steps.cache-udunits.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:udunits-clean iricdev.proj
+
+    - name: Cache shapelib
+      id: cache-shapelib
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
+        key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
+
+    - name: Build shapelib
+      if: steps.cache-shapelib.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:shapelib-clean iricdev.proj
+
     - name: Check so far
       shell: cmd
       run: |
+        dir downloads
         dir lib\build
         dir lib\src
         dir lib\install
         dir /s lib\install
-
-    # - name: Cache expat
-    #   id: cache-expat
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
-    #     key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
-
-    # - name: Build expat
-    #   if: steps.cache-expat.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
-
-    # - name: Cache udunits
-    #   id: cache-udunits
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
-    #     key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
-
-    # - name: Build udunits
-    #   if: steps.cache-udunits.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
-
-    # - name: Cache shapelib
-    #   id: cache-shapelib
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
-    #     key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
-
-    # - name: Build shapelib
-    #   if: steps.cache-shapelib.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
 
     # - name: Cache openssl
     #   id: cache-openssl

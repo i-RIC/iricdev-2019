@@ -8,6 +8,7 @@
 
   <Target Name="sqlite-clean">
     <RemoveDir Directories="$(SRC_DIR)\sqlite-src-3320300" />
+    <Delete Files="$(DOWNLOADS_DIR)\sqlite-src-3320300.zip" />
   </Target>
 
   <Target Name="sqlite-build" DependsOnTargets="sqlite-build-debug;sqlite-build-release" />

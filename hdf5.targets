@@ -11,8 +11,9 @@
   </PropertyGroup>
 
   <Target Name="hdf5-clean">
-    <RemoveDir Directories="lib\build\hdf5-$(HDF5_VER)" />
+    <RemoveDir Directories="$(BUILD_DIR)\hdf5-$(HDF5_VER)" />
     <RemoveDir Directories="$(SRC_DIR)\CMake-hdf5-$(HDF5_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\CMake-hdf5-$(HDF5_VER).zip" />
   </Target>
 
   <Target Name="hdf5-build" DependsOnTargets="hdf5-build-debug;hdf5-build-release" />

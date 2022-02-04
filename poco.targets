@@ -15,6 +15,7 @@
   <Target Name="poco-clean">
     <RemoveDir Directories="$(BUILD_DIR)\poco-$(POCO_VER)" />
     <RemoveDir Directories="$(SRC_DIR)\poco-$(POCO_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\poco-$(POCO_VER)-release.zip" />
   </Target>
 
   <Target Name="poco-build" DependsOnTargets="poco-build-debug;poco-build-release" />

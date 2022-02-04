@@ -4,6 +4,12 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="udunits-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\udunits-$(UDUNITS_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\udunits-$(UDUNITS_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\udunits-$(UDUNITS_VER).zip" />
+  </Target>
+
   <Target Name="udunits-build" DependsOnTargets="udunits-build-debug;udunits-build-release" />
 
   <Target Name="udunits-build-debug" Inputs="udunits.targets;udunits.cmake" Outputs="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\debug\lib\udunits2.lib" DependsOnTargets="udunits-src;expat-build-debug">
