@@ -47,25 +47,6 @@ jobs:
         with:
           vs-version: '[16.9,17)'
 
-      - name: Cache qt
-        id: cache-qt
-        uses: actions/cache@v2
-        with:
-          path: C:\Qt
-          key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
-
-      - name: Debug
-        run: |
-          $env:PATH="C:\Qt\5.14.2\msvc2017_64\bin;$env:PATH"
-          Write-Output "GENERATOR=$env:GENERATOR"
-          Write-Output "SGEN=$env:SGEN"
-          Get-Command msbuild
-          msbuild -version
-          Get-Command cmake
-          cmake --version
-          Get-Command qmake
-          qmake --version
-
       - name: Cache hdf5
         id: cache-hdf5
         uses: actions/cache@v2
@@ -79,6 +60,42 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
+
+  cache-netcdf-c:
+    runs-on: windows-2019
+    needs: [cache-hdf5]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache hdf5
+        id: cache-hdf5
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
+          key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+
+      - name: Cache netcdf-c
+        id: cache-netcdf-c
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
+          key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
+
+      - name: Build netcdf-c
+        if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
 
   cache-qwt:
     runs-on: windows-2019
@@ -118,9 +135,38 @@ jobs:
           cd /D ${{github.workspace}}
           msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
 
+  cache-sqlite:
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache sqlite
+        id: cache-sqlite
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/sqlite-src-3320300
+          key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
+
+      - name: Build sqlite
+        if: steps.cache-sqlite.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
+
+
   create-release:
     runs-on: windows-2019
-    needs: [cache-hdf5, cache-qwt]
+    needs: [cache-hdf5, cache-netcdf-c, cache-qwt, cache-sqlite]
 
     steps:
       - uses: actions/checkout@v2
@@ -147,9 +193,15 @@ jobs:
           path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
           key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
 
+      - name: Cache sqlite
+        id: cache-sqlite
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/sqlite-src-3320300
+          key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
+
       - name: Zip install
         run: Get-ChildItem lib\install
-
 
   # build:
 
