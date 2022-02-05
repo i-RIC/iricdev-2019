@@ -248,6 +248,36 @@ jobs:
         msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
         msbuild /noLogo /maxCpuCount /target:libpng-clean iricdev.proj
 
+    - name: Cache proj
+      id: cache-proj
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
+        key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
+
+    - name: Build proj             # depends on sqlite libtiff
+      if: steps.cache-proj.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:proj-clean iricdev.proj
+
+    - name: Cache gdal
+      id: cache-gdal
+      uses: actions/cache@v2
+      with:
+        path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
+        key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
+
+    - name: Build gdal             # depends on netcdf-c and proj
+      if: steps.cache-gdal.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /noLogo /maxCpuCount /target:gdal-build iricdev.proj
+        msbuild /noLogo /maxCpuCount /target:gdal-clean iricdev.proj
+
     - name: Check so far
       shell: cmd
       run: |
@@ -256,33 +286,7 @@ jobs:
         dir lib\src
         dir lib\install
         dir /s lib\install
-    # - name: Cache proj
-    #   id: cache-proj
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
-    #     key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
 
-    # - name: Build proj             # depends on sqlite libtiff
-    #   if: steps.cache-proj.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
-
-    # - name: Cache gdal
-    #   id: cache-gdal
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
-    #     key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
-
-    # - name: Build gdal             # depends on netcdf-c and proj
-    #   if: steps.cache-gdal.outputs.cache-hit != 'true'
-    #   shell: cmd
-    #   run: |
-    #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-    #     msbuild /noLogo /maxCpuCount /target:gdal-build iricdev.proj
 
     # - name: Cache iriclib
     #   id: cache-iriclib
