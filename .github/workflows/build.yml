@@ -85,7 +85,7 @@ jobs:
 
   create-release:
     runs-on: windows-2019
-    needs: [qwt]
+    needs: [cache-qwt]
 
     steps:
       - uses: actions/checkout@v2
