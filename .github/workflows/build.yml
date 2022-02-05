@@ -10,6 +10,7 @@ on:
 env:
   GENERATOR: Ninja Multi-Config
   SGEN: ninja-x64
+  # @TODO change ${{runner.os}} to ${{runner.env???}}
 
 jobs:
   cache-qt:
@@ -32,9 +33,8 @@ jobs:
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: .\scripts\Windows\install_qt_fast_windows.ps1
 
-  cache-qwt:
+  cache-hdf5:
     runs-on: windows-2019
-    needs: [cache-qt]
 
     steps:
       - uses: actions/checkout@v2
@@ -66,6 +66,42 @@ jobs:
           Get-Command qmake
           qmake --version
 
+      - name: Cache hdf5
+        id: cache-hdf5
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
+          key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+
+      - name: Build hdf5
+        if: steps.cache-hdf5.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
+
+  cache-qwt:
+    runs-on: windows-2019
+    needs: [cache-qt]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: C:\Qt
+          key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
+
       - name: Cache qwt
         id: cache-qwt
         uses: actions/cache@v2
@@ -81,11 +117,10 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           cd /D ${{github.workspace}}
           msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
-          msbuild /noLogo /maxCpuCount /target:qwt-clean iricdev.proj
 
   create-release:
     runs-on: windows-2019
-    needs: [cache-qwt]
+    needs: [cache-hdf5, cache-qwt]
 
     steps:
       - uses: actions/checkout@v2
@@ -97,6 +132,13 @@ jobs:
         uses: microsoft/setup-msbuild@v1.0.2
         with:
           vs-version: '[16.9,17)'
+
+      - name: Cache hdf5
+        id: cache-hdf5
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
+          key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
 
       - name: Cache qwt
         id: cache-qwt
