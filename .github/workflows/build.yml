@@ -14,33 +14,33 @@ env:
 
 jobs:
 
-  cache-expat:
-    runs-on: windows-2019
+  # cache-expat:
+  #   runs-on: windows-2019
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Init github env
-        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+  #     - name: Init github env
+  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
-        with:
-          vs-version: '[16.9,17)'
+  #     - name: Setup path for msbuild
+  #       uses: microsoft/setup-msbuild@v1.0.2
+  #       with:
+  #         vs-version: '[16.9,17)'
 
-      - name: Cache expat
-        id: cache-expat
-        uses: actions/cache@v2
-        with:
-          path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
-          key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
+  #     - name: Cache expat
+  #       id: cache-expat
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
+  #         key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
-      - name: Build expat
-        if: steps.cache-expat.outputs.cache-hit != 'true'
-        shell: cmd
-        run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
+  #     - name: Build expat
+  #       if: steps.cache-expat.outputs.cache-hit != 'true'
+  #       shell: cmd
+  #       run: |
+  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+  #         msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
 
   cache-hdf5:
     runs-on: windows-2019
@@ -248,41 +248,41 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
 
-  cache-udunits:
-    runs-on: windows-2019
-    needs: [cache-expat]
+  # cache-udunits:
+  #   runs-on: windows-2019
+  #   needs: [cache-expat]
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Init github env
-        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+  #     - name: Init github env
+  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
-        with:
-          vs-version: '[16.9,17)'
+  #     - name: Setup path for msbuild
+  #       uses: microsoft/setup-msbuild@v1.0.2
+  #       with:
+  #         vs-version: '[16.9,17)'
 
-      - name: Cache expat
-        id: cache-expat
-        uses: actions/cache@v2
-        with:
-          path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
-          key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
+  #     - name: Cache expat
+  #       id: cache-expat
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
+  #         key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
-      - name: Cache udunits
-        id: cache-udunits
-        uses: actions/cache@v2
-        with:
-          path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
-          key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
+  #     - name: Cache udunits
+  #       id: cache-udunits
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
+  #         key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
 
-      - name: Build udunits
-        if: steps.cache-udunits.outputs.cache-hit != 'true'
-        shell: cmd
-        run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
+  #     - name: Build udunits
+  #       if: steps.cache-udunits.outputs.cache-hit != 'true'
+  #       shell: cmd
+  #       run: |
+  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+  #         msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
 
   # create-release:
   #   runs-on: windows-2019
