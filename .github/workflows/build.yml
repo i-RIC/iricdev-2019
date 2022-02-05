@@ -70,219 +70,219 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
 
-  # cache-libtiff:
-  #   runs-on: windows-2019
+  cache-libtiff:
+    runs-on: windows-2019
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Init github env
-  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Setup path for msbuild
-  #       uses: microsoft/setup-msbuild@v1.0.2
-  #       with:
-  #         vs-version: '[16.9,17)'
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
 
-  #     - name: Cache libtiff
-  #       id: cache-libtiff
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
-  #         key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
+      - name: Cache libtiff
+        id: cache-libtiff
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
+          key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
 
-  #     - name: Build libtiff
-  #       if: steps.cache-libtiff.outputs.cache-hit != 'true'
-  #       shell: cmd
-  #       run: |
-  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #         msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
+      - name: Build libtiff
+        if: steps.cache-libtiff.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
 
-  # cache-netcdf-c:
-  #   runs-on: windows-2019
-  #   needs: [cache-hdf5]
+  cache-netcdf-c:
+    runs-on: windows-2019
+    needs: [cache-hdf5]
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Init github env
-  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Setup path for msbuild
-  #       uses: microsoft/setup-msbuild@v1.0.2
-  #       with:
-  #         vs-version: '[16.9,17)'
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
 
-  #     - name: Cache hdf5
-  #       id: cache-hdf5
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
-  #         key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+      - name: Cache hdf5
+        id: cache-hdf5
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
+          key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
 
-  #     - name: Cache netcdf-c
-  #       id: cache-netcdf-c
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
-  #         key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
+      - name: Cache netcdf-c
+        id: cache-netcdf-c
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
+          key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
 
-  #     - name: Build netcdf-c
-  #       if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
-  #       shell: cmd
-  #       run: |
-  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #         msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
+      - name: Build netcdf-c
+        if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
 
-  # cache-poco:
-  #   runs-on: windows-2019
+  cache-poco:
+    runs-on: windows-2019
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Init github env
-  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Setup path for msbuild
-  #       uses: microsoft/setup-msbuild@v1.0.2
-  #       with:
-  #         vs-version: '[16.9,17)'
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
 
-  #     - name: Cache poco
-  #       id: cache-poco
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
-  #         key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
+      - name: Cache poco
+        id: cache-poco
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
+          key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
 
-  #     - name: Build poco
-  #       if: steps.cache-poco.outputs.cache-hit != 'true'
-  #       shell: cmd
-  #       run: |
-  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #         msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
+      - name: Build poco
+        if: steps.cache-poco.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
 
-  # cache-qt:
-  #   runs-on: windows-2019
+  cache-qt:
+    runs-on: windows-2019
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Init github env
-  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Cache qt
-  #       id: cache-qt
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: C:\Qt
-  #         key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
+      - name: Cache qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: C:\Qt
+          key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
 
-  #     - name: Install qt
-  #       if: steps.cache-qt.outputs.cache-hit != 'true'
-  #       run: .\scripts\Windows\install_qt_fast_windows.ps1
+      - name: Install qt
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: .\scripts\Windows\install_qt_fast_windows.ps1
 
-  # cache-qwt:
-  #   runs-on: windows-2019
-  #   needs: [cache-qt]
+  cache-qwt:
+    runs-on: windows-2019
+    needs: [cache-qt]
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Init github env
-  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Setup path for msbuild
-  #       uses: microsoft/setup-msbuild@v1.0.2
-  #       with:
-  #         vs-version: '[16.9,17)'
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
 
-  #     - name: Cache qt
-  #       id: cache-qt
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: C:\Qt
-  #         key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
+      - name: Cache qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: C:\Qt
+          key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
 
-  #     - name: Cache qwt
-  #       id: cache-qwt
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
-  #         key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
+      - name: Cache qwt
+        id: cache-qwt
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
+          key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
 
-  #     - name: Build qwt
-  #       if: steps.cache-qwt.outputs.cache-hit != 'true'
-  #       shell: cmd
-  #       run: |
-  #         call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
-  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #         cd /D ${{github.workspace}}
-  #         msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
+      - name: Build qwt
+        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cd /D ${{github.workspace}}
+          msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
 
-  # cache-sqlite:
-  #   runs-on: windows-2019
+  cache-sqlite:
+    runs-on: windows-2019
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Init github env
-  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Setup path for msbuild
-  #       uses: microsoft/setup-msbuild@v1.0.2
-  #       with:
-  #         vs-version: '[16.9,17)'
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
 
-  #     - name: Cache sqlite
-  #       id: cache-sqlite
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/sqlite-src-3320300
-  #         key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
+      - name: Cache sqlite
+        id: cache-sqlite
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/sqlite-src-3320300
+          key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
 
-  #     - name: Build sqlite
-  #       if: steps.cache-sqlite.outputs.cache-hit != 'true'
-  #       shell: cmd
-  #       run: |
-  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #         msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
+      - name: Build sqlite
+        if: steps.cache-sqlite.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
 
-  # cache-udunits:
-  #   runs-on: windows-2019
-  #   needs: [cache-expat]
+  cache-udunits:
+    runs-on: windows-2019
+    needs: [cache-expat]
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Init github env
-  #       run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-  #     - name: Setup path for msbuild
-  #       uses: microsoft/setup-msbuild@v1.0.2
-  #       with:
-  #         vs-version: '[16.9,17)'
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
 
-  #     - name: Cache expat
-  #       id: cache-expat
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
-  #         key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
+      - name: Cache expat
+        id: cache-expat
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
+          key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
-  #     - name: Cache udunits
-  #       id: cache-udunits
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
-  #         key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
+      - name: Cache udunits
+        id: cache-udunits
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
+          key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
 
-  #     - name: Build udunits
-  #       if: steps.cache-udunits.outputs.cache-hit != 'true'
-  #       shell: cmd
-  #       run: |
-  #         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #         msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
+      - name: Build udunits
+        if: steps.cache-udunits.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
 
   # create-release:
   #   runs-on: windows-2019
