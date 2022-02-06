@@ -12,7 +12,7 @@ set GDAL_VER=3.0.4
 set GEOS_VER=3.4.3
 set HDF5_VER=1.8.21
 set IRICLIB_ADF_VER=0.2
-set IRICLIB_VER=4.0.25
+set IRICLIB_VER=4.0.26
 set LIBPNG_VER=1.6.37
 set LIBTIFF_VER=4.1.0
 set NETCDF_VER=4.7.4
@@ -29,7 +29,7 @@ set YAML_CPP_VER=0.6.3
 :: replace . with _
 ::
 set BOOST_UVER=%BOOST_VER:.=_%
-set EXPAT_UVER=R_%EXPAT_VER:.=_%
+set EXPAT_UVER=%EXPAT_VER:.=_%
 set OPENSSL_UVER=%OPENSSL_VER:.=_%
 if NOT defined BUILD_TOOLS  set BUILD_TOOLS="OFF"
 
