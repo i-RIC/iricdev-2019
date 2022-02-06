@@ -397,7 +397,7 @@ jobs:
           }
           $upload_uri = $Matches[1] + "?name=iricdev-vs2019-build-cache.7z"
           $h["Content-type"] = "application/x-7z-compressed"
-          $bytes = [System.IO.File]::ReadAllBytes("lib\iricdev-vs2019-build-cache.7z")
+          $bytes = [System.IO.File]::ReadAllBytes("iricdev-vs2019-build-cache.7z")
           $upload = Invoke-WebRequest -Uri $upload_uri -Headers $h -Method POST -Body $bytes
           # update release
           # PATCH /repos/{owner}/{repo}/releases/{release_id}
