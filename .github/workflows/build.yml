@@ -44,7 +44,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
 
   cache-gdal:
-  # @todo
+  # 19m 3s
     runs-on: windows-2019
     needs: [cache-netcdf-c, cache-proj]
 
@@ -146,7 +146,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
 
   cache-iriclib:
-  # @todo
+  # @todo 29m 11s
     runs-on: windows-2019
     needs: [cache-hdf5, cache-poco]
 
@@ -187,7 +187,13 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
+          msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj /fileLogger
+
+      - uses: actions/upload-artifact@v2
+        if: steps.cache-iriclib.outputs.cache-hit != 'true'
+        with:
+          name: iriclib-build.log
+          path: msbuild.log
 
   cache-libpng:
   # 1m 13s
@@ -256,7 +262,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
 
   cache-netcdf-c:
-  # 12m 29s
+  # @todo 12m 29s
     runs-on: windows-2019
     needs: [cache-hdf5]
 
@@ -290,7 +296,13 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
+          msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj /fileLogger
+
+      - uses: actions/upload-artifact@v2
+        if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
+        with:
+          name: netcdf-c-build.log
+          path: msbuild.log
 
   cache-openssl:
   # 6m 53s
@@ -550,7 +562,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
 
   cache-vtk-debug:
-  # @todo
+  # 29m 41s
     runs-on: windows-2019
     needs: [cache-qt]
 
@@ -589,7 +601,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:vtk-build-debug iricdev.proj
 
   cache-vtk-release:
-  # @todo
+  # 41m 47s
     runs-on: windows-2019
     needs: [cache-qt]
 
@@ -628,7 +640,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:vtk-build-release iricdev.proj
 
   cache-yaml:
-  # @todo
+  # 1m 19s
     runs-on: windows-2019
 
     steps:
@@ -657,7 +669,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:yaml-cpp-build iricdev.proj
 
   create-release:
-  # @todo
+  # 4m 24s
     runs-on: windows-2019
     needs: [cache-expat, cache-gdal, cache-geos, cache-hdf5, cache-iriclib, cache-libpng, cache-libtiff, cache-netcdf-c, cache-openssl, cache-poco, cache-proj, cache-qwt, cache-shapelib, cache-sqlite, cache-udunits, cache-vtk-debug, cache-vtk-release, cache-yaml]
 
