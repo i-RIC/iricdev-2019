@@ -10,7 +10,7 @@ on:
 env:
   GENERATOR: Ninja Multi-Config
   SGEN: ninja-x64
-  # @TODO change ${{runner.os}} to ${{runner.env???}}
+  # @TODO change ${{runner.os}} to ${{runner.env???}} -> vs2019-x64
 
 jobs:
 
@@ -42,6 +42,50 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
+
+  cache-gdal:
+  # @todo
+    runs-on: windows-2019
+    needs: [cache-netcdf-c, cache-proj]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache netcdf-c
+        id: cache-netcdf-c
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
+          key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
+
+      - name: Cache proj
+        id: cache-proj
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
+          key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
+
+      - name: Cache gdal
+        id: cache-gdal
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
+          key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
+
+      - name: Build gdal
+        if: steps.cache-gdal.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:gdal-build iricdev.proj
 
   cache-geos:
   # 18m 11s
@@ -101,8 +145,52 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
 
-  cache-libpng:
+  cache-iriclib:
   # @todo
+    runs-on: windows-2019
+    needs: [cache-hdf5, cache-poco]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache hdf5
+        id: cache-hdf5
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
+          key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+
+      - name: Cache poco
+        id: cache-poco
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
+          key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
+
+      - name: Cache iriclib
+        id: cache-iriclib
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
+          key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
+
+      - name: Build iriclib
+        if: steps.cache-iriclib.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
+
+  cache-libpng:
+  # 1m 13s
     runs-on: windows-2019
     needs: [cache-hdf5]
 
@@ -263,7 +351,7 @@ jobs:
           msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
 
   cache-proj:
-  # @todo
+  # 10m 19s
     runs-on: windows-2019
     needs: [cache-libtiff, cache-sqlite]
 
@@ -461,10 +549,117 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
 
+  cache-vtk-debug:
+  # @todo
+    runs-on: windows-2019
+    needs: [cache-qt]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: C:\Qt
+          key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
+
+      - name: Cache vtk debug
+        id: cache-vtk-debug
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/debug
+          key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+
+      - name: Build vtk debug
+        if: steps.cache-vtk-debug.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cd /D ${{github.workspace}}
+          msbuild /noLogo /maxCpuCount /target:vtk-build-debug iricdev.proj
+
+  cache-vtk-release:
+  # @todo
+    runs-on: windows-2019
+    needs: [cache-qt]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: C:\Qt
+          key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
+
+      - name: Cache vtk release
+        id: cache-vtk-release
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/release
+          key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+
+      - name: Build vtk release
+        if: steps.cache-vtk-release.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cd /D ${{github.workspace}}
+          msbuild /noLogo /maxCpuCount /target:vtk-build-release iricdev.proj
+
+  cache-yaml:
+  # @todo
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache yaml
+        id: cache-yaml
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/yaml-cpp-${{env.YAML_CPP_VER}}
+          key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
+
+      - name: Build yaml
+        if: steps.cache-yaml.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:yaml-cpp-build iricdev.proj
+
   create-release:
   # @todo
     runs-on: windows-2019
-    needs: [cache-expat, cache-geos, cache-hdf5, cache-libpng, cache-libtiff, cache-netcdf-c, cache-openssl, cache-poco, cache-proj, cache-qwt, cache-shapelib, cache-sqlite, cache-udunits]
+    needs: [cache-expat, cache-gdal, cache-geos, cache-hdf5, cache-iriclib, cache-libpng, cache-libtiff, cache-netcdf-c, cache-openssl, cache-poco, cache-proj, cache-qwt, cache-shapelib, cache-sqlite, cache-udunits, cache-vtk-debug, cache-vtk-release, cache-yaml]
 
     steps:
       - uses: actions/checkout@v2
@@ -484,6 +679,13 @@ jobs:
           path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
           key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
+      - name: Cache gdal
+        id: cache-gdal
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
+          key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
+
       - name: Cache geos
         id: cache-geos
         uses: actions/cache@v2
@@ -497,6 +699,13 @@ jobs:
         with:
           path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
           key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+
+      - name: Cache iriclib
+        id: cache-iriclib
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
+          key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
 
       - name: Cache libpng
         id: cache-libpng
@@ -568,6 +777,27 @@ jobs:
           path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
           key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
 
+      - name: Cache vtk debug
+        id: cache-vtk-debug
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/debug
+          key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+ 
+      - name: Cache vtk release
+        id: cache-vtk-release
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/release
+          key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
+
+      - name: Cache yaml
+        id: cache-yaml
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/yaml-cpp-${{env.YAML_CPP_VER}}
+          key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
+
       - name: Create iricdev-vs2019-build-cache.7z
         run: 7z a iricdev-vs2019-build-cache.7z lib\install
 
@@ -625,161 +855,3 @@ jobs:
           # display download url
           Write-Output "$((($release.Content | ConvertFrom-Json).assets).browser_download_url)"
           Get-FileHash "iricdev-vs2019-build-cache.7z"
-
-  # build:
-
-  #   steps:
-  #   - uses: actions/checkout@v2
-
-  #   - name: Setup path for msbuild
-  #     uses: microsoft/setup-msbuild@v1.0.2
-  #     with:
-  #       vs-version: '[16.9,17)'
-
-
-  #   - name: Export version numbers
-  #     run: |
-  #       .\versions.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-  #       Copy-Item .\programs_std.prop .\programs.prop
-
-  #   - name: debug
-  #     run: |
-  #       $env:PATH="C:\Qt\5.14.2\msvc2017_64\bin;$env:PATH"
-  #       Write-Output "GENERATOR=$env:GENERATOR"
-  #       Write-Output "SGEN=$env:SGEN"
-  #       Get-Command msbuild
-  #       msbuild -version
-  #       Get-Command cmake
-  #       cmake --version
-  #       Get-Command qmake
-  #       qmake --version
-
-  #   - name: Cache gdal
-  #     id: cache-gdal
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
-  #       key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
-
-  #   - name: Build gdal             # depends on netcdf-c and proj
-  #     if: steps.cache-gdal.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:gdal-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:gdal-clean iricdev.proj
-
-  #   - name: Check so far
-  #     shell: cmd
-  #     run: |
-  #       dir downloads
-  #       dir lib\build
-  #       dir lib\src
-  #       dir lib\install
-  #       dir /s lib\install
-
-
-  #   # - name: Cache iriclib
-  #   #   id: cache-iriclib
-  #   #   uses: actions/cache@v2
-  #   #   with:
-  #   #     path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
-  #   #     key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
-
-  #   # - name: Build iriclib          # depends on hdf5 and poco
-  #   #   if: steps.cache-iriclib.outputs.cache-hit != 'true'
-  #   #   shell: cmd
-  #   #   run: |
-  #   #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #   #     msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj
-
-  #   # - name: Cache vtk
-  #   #   id: cache-vtk
-  #   #   uses: actions/cache@v2
-  #   #   with:
-  #   #     path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}
-  #   #     key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
-
-  #   # - name: Build vtk
-  #   #   if: steps.cache-vtk.outputs.cache-hit != 'true'
-  #   #   shell: cmd
-  #   #   run: |
-  #   #     call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
-  #   #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #   #     cd /D ${{github.workspace}}
-  #   #     msbuild /noLogo /maxCpuCount /target:vtk-build iricdev.proj
-
-  #   # - name: Cache yaml
-  #   #   id: cache-yaml
-  #   #   uses: actions/cache@v2
-  #   #   with:
-  #   #     path: ${{github.workspace}}/lib/install/yaml-cpp-${{env.YAML_CPP_VER}}
-  #   #     key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
-
-  #   # - name: Build yaml
-  #   #   if: steps.cache-yaml.outputs.cache-hit != 'true'
-  #   #   shell: cmd
-  #   #   run: |
-  #   #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #   #     msbuild /noLogo /maxCpuCount /target:yaml-cpp-build iricdev.proj
-
-  #   # - name: Create iric-vs2019-build-cache.7z
-  #   #   run: |
-  #   #     Push-Location lib
-  #   #     7z a iric-vs2019-build-cache.7z install '-x!install\boost-${{env.BOOST_VER}}' '-x!install\vtk-${{env.VTK_VER}}\debug-vtk-leaks'
-  #   #     Pop-Location
-
-  #   # - name: Create release
-  #   #   env:
-  #   #     releases_url: ${{github.api_url}}/repos/${{github.repository}}/releases
-  #   #   run: |
-  #   #     # create tag
-  #   #     $tag_name = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss')
-
-  #   #     # store commit
-  #   #     $target_commitish = "${{github.sha}}"
-
-  #   #     # create headers dictionary
-  #   #     $h = @{"Authorization" = "token ${{secrets.GITHUB_TOKEN}}"}
-  #   #     $releases_url = "${{env.releases_url}}"
-  #   #     # create release
-  #   #     # POST /repos/{owner}/{repo}/releases
-  #   #     # see https://docs.github.com/en/rest/reference/repos#create-a-release
-  #   #     # see https://docs.github.com/ja/rest/reference/repos#create-a-release
-  #   #     #
-  #   #     $create = @{
-  #   #       "tag_name"         = "$tag_name"
-  #   #       "target_commitish" = "$target_commitish"
-  #   #       "name"             = "iricdev " + $tag_name
-  #   #       "draft"            = $true
-  #   #     }
-  #   #     $create_json = $create | ConvertTo-Json
-  #   #     $release = Invoke-WebRequest -Uri $releases_url -Headers $h -Method POST -Body $create_json
-  #   #     # upload artifact (asset)
-  #   #     # POST /repos/{owner}/{repo}/releases/{release_id}/assets
-  #   #     # see https://docs.github.com/en/rest/reference/repos#upload-a-release-asset
-  #   #     # see https://docs.github.com/ja/rest/reference/repos#upload-a-release-asset
-  #   #     #
-  #   #     $upload_uri = ($release.Content | ConvertFrom-Json).upload_url
-  #   #     if (! ($upload_uri -match  "(.*)\{\?name,label\}") ) {
-  #   #       # expecting URI{?name,label}
-  #   #       # ie https://uploads.github.com/repos/scharlton2/iricdev-2019/releases/24058628/assets{?name,label}
-  #   #       throw "Bad upload_url"
-  #   #     }
-  #   #     $upload_uri = $Matches[1] + "?name=iric-vs2019-build-cache.7z"
-  #   #     $h["Content-type"] = "application/x-7z-compressed"
-  #   #     $bytes = [System.IO.File]::ReadAllBytes("lib\iric-vs2019-build-cache.7z")
-  #   #     $upload = Invoke-WebRequest -Uri $upload_uri -Headers $h -Method POST -Body $bytes
-  #   #     # update release
-  #   #     # PATCH /repos/{owner}/{repo}/releases/{release_id}
-  #   #     # see https://docs.github.com/en/rest/reference/repos#update-a-release
-  #   #     # see https://docs.github.com/ja/rest/reference/repos#update-a-release
-  #   #     #
-  #   #     $release_id = ($release.Content | ConvertFrom-Json).id
-  #   #     $h.Remove("Content-type")
-  #   #     $update = @{ "draft" = $false }
-  #   #     $update_json = $update | ConvertTo-Json
-  #   #     $release = Invoke-WebRequest -Uri "$releases_url/$release_id" -Headers $h -Method PATCH -Body $update_json
-  #   #     # display download url
-  #   #     Write-Output "$((($release.Content | ConvertFrom-Json).assets).browser_download_url)"
-  #   #     Get-FileHash "lib\iric-vs2019-build-cache.7z"
