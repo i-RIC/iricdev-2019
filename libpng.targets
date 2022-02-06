@@ -25,6 +25,7 @@
   </Target>
 
   <Target Name="libpng-download" Condition="!Exists('$(DOWNLOADS_DIR)\libpng-$(LIBPNG_VER).tar.xz')">
+    <MakeDir Directories="$(DOWNLOADS_DIR)" />
     <Message Text="Downloading libpng-$(LIBPNG_VER).tar.xz" />
     <Exec Command="$(CURL) https://sourceforge.net/projects/libpng/files/libpng16/$(LIBPNG_VER)/libpng-$(LIBPNG_VER).tar.xz" WorkingDirectory="$(DOWNLOADS_DIR)" />
   </Target>
