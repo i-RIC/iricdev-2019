@@ -134,6 +134,34 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
 
+  cache-openssl:
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache openssl
+        id: cache-openssl
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
+          key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
+
+      - name: Build openssl
+        if: steps.cache-openssl.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:openssl-build iricdev.proj
+
   cache-poco:
     runs-on: windows-2019
 
@@ -220,6 +248,34 @@ jobs:
           cd /D ${{github.workspace}}
           msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
 
+  cache-shapelib:
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache shapelib
+        id: cache-shapelib
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
+          key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
+
+      - name: Build shapelib
+        if: steps.cache-shapelib.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
+
   cache-sqlite:
     runs-on: windows-2019
 
@@ -286,7 +342,7 @@ jobs:
 
   create-release:
     runs-on: windows-2019
-    needs: [cache-expat, cache-hdf5, cache-libtiff, cache-netcdf-c, cache-poco, cache-qwt, cache-sqlite, cache-udunits]
+    needs: [cache-expat, cache-hdf5, cache-libtiff, cache-netcdf-c, cache-openssl, cache-poco, cache-qwt, cache-shapelib, cache-sqlite, cache-udunits]
 
     steps:
       - uses: actions/checkout@v2
@@ -327,6 +383,13 @@ jobs:
           path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
           key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
 
+      - name: Cache openssl
+        id: cache-openssl
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
+          key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
+
       - name: Cache poco
         id: cache-poco
         uses: actions/cache@v2
@@ -340,6 +403,13 @@ jobs:
         with:
           path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
           key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
+
+      - name: Cache shapelib
+        id: cache-shapelib
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
+          key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
 
       - name: Cache sqlite
         id: cache-sqlite
@@ -363,7 +433,7 @@ jobs:
           releases_url: ${{github.api_url}}/repos/${{github.repository}}/releases
         run: |
           # create tag
-          $tag_name = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss')
+          $tag_name = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH.mm.ssK')
 
           # store commit
           $target_commitish = "${{github.sha}}"
@@ -472,126 +542,6 @@ jobs:
   #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
   #       msbuild /noLogo /maxCpuCount /target:boost-src iricdev.proj
   #       msbuild /noLogo /maxCpuCount /target:boost-clean iricdev.proj
-
-  #   - name: Cache hdf5
-  #     id: cache-hdf5
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
-  #       key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
-
-  #   - name: Build hdf5
-  #     if: steps.cache-hdf5.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:hdf5-clean iricdev.proj
-
-  #   - name: Cache sqlite
-  #     id: cache-sqlite
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/sqlite-src-3320300
-  #       key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
-
-  #   - name: Build sqlite
-  #     if: steps.cache-sqlite.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:sqlite-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:sqlite-clean iricdev.proj
-
-  #   - name: Cache netcdf-c
-  #     id: cache-netcdf-c
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
-  #       key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
-
-  #   - name: Build netcdf-c         # depends on hdf5
-  #     if: steps.cache-netcdf-c.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:netcdf-c-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:netcdf-c-clean iricdev.proj
-
-  #   - name: Cache libtiff
-  #     id: cache-libtiff
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
-  #       key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
-
-  #   - name: Build libtiff
-  #     if: steps.cache-libtiff.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:libtiff-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:libtiff-clean iricdev.proj
-
-  #   - name: Cache poco
-  #     id: cache-poco
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
-  #       key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
-
-  #   - name: Build poco
-  #     if: steps.cache-poco.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:poco-clean iricdev.proj
-
-  #   - name: Cache expat
-  #     id: cache-expat
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
-  #       key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
-
-  #   - name: Build expat
-  #     if: steps.cache-expat.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:expat-clean iricdev.proj
-
-  #   - name: Cache udunits
-  #     id: cache-udunits
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
-  #       key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
-
-  #   - name: Build udunits          # depends on expat
-  #     if: steps.cache-udunits.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:udunits-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:udunits-clean iricdev.proj
-
-  #   - name: Cache shapelib
-  #     id: cache-shapelib
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
-  #       key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
-
-  #   - name: Build shapelib
-  #     if: steps.cache-shapelib.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:shapelib-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:shapelib-clean iricdev.proj
 
   #   - name: Cache openssl
   #     id: cache-openssl
