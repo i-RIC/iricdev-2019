@@ -43,6 +43,35 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:expat-build iricdev.proj
 
+  cache-geos:
+  # @todo
+    runs-on: windows-2019
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache geos
+        id: cache-geos
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
+          key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
+
+      - name: Build geos
+        if: steps.cache-geos.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:geos-build iricdev.proj
+
   cache-hdf5:
   # 15m 9s
     runs-on: windows-2019
@@ -71,6 +100,43 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
+
+  cache-libpng:
+  # @todo
+    runs-on: windows-2019
+    needs: [cache-hdf5]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache hdf5
+        id: cache-hdf5
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
+          key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+
+      - name: Cache libpng
+        id: cache-libpng
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
+          key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
+
+      - name: Build libpng
+        if: steps.cache-libpng.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
 
   cache-libtiff:
   # 2m 14s
@@ -195,6 +261,50 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:poco-build iricdev.proj
+
+  cache-proj:
+  # @todo
+    runs-on: windows-2019
+    needs: [cache-libtiff, cache-sqlite]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Init github env
+        run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Setup path for msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[16.9,17)'
+
+      - name: Cache libtiff
+        id: cache-libtiff
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
+          key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
+
+      - name: Cache sqlite
+        id: cache-sqlite
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/sqlite-src-3320300
+          key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
+
+      - name: Cache proj
+        id: cache-proj
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
+          key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
+
+      - name: Build proj
+        if: steps.cache-proj.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
 
   cache-qt:
   # 13m 17s
@@ -353,7 +463,7 @@ jobs:
 
   create-release:
     runs-on: windows-2019
-    needs: [cache-expat, cache-hdf5, cache-libtiff, cache-netcdf-c, cache-openssl, cache-poco, cache-qwt, cache-shapelib, cache-sqlite, cache-udunits]
+    needs: [cache-expat, cache-geos, cache-hdf5, cache-libpng, cache-libtiff, cache-netcdf-c, cache-openssl, cache-poco, cache-proj, cache-qwt, cache-shapelib, cache-sqlite, cache-udunits]
 
     steps:
       - uses: actions/checkout@v2
@@ -373,12 +483,26 @@ jobs:
           path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
           key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
+      - name: Cache geos
+        id: cache-geos
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
+          key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
+
       - name: Cache hdf5
         id: cache-hdf5
         uses: actions/cache@v2
         with:
           path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
           key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
+
+      - name: Cache libpng
+        id: cache-libpng
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
+          key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
 
       - name: Cache libtiff
         id: cache-libtiff
@@ -407,6 +531,13 @@ jobs:
         with:
           path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
           key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
+
+      - name: Cache proj
+        id: cache-proj
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
+          key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
 
       - name: Cache qwt
         id: cache-qwt
@@ -521,98 +652,6 @@ jobs:
   #       cmake --version
   #       Get-Command qmake
   #       qmake --version
-
-  #   - name: Cache qwt
-  #     id: cache-qwt
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
-  #       key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
-
-  #   - name: Build qwt
-  #     if: steps.cache-qwt.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Qt\5.14.2\msvc2017_64\bin\qtenv2.bat"
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       cd /D ${{github.workspace}}
-  #       msbuild /noLogo /maxCpuCount /target:qwt-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:qwt-clean iricdev.proj
-
-  #   - name: Cache boost
-  #     id: cache-boost
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/boost-${{env.BOOST_VER}}
-  #       key: ${{runner.os}}-boost-${{hashFiles('./boost.*')}}
-
-  #   - name: Build boost
-  #     if: steps.cache-boost.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:boost-src iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:boost-clean iricdev.proj
-
-  #   - name: Cache openssl
-  #     id: cache-openssl
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
-  #       key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
-
-  #   - name: Build openssl
-  #     if: steps.cache-openssl.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:openssl-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:openssl-clean iricdev.proj
-
-  #   - name: Cache geos
-  #     id: cache-geos
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
-  #       key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
-
-  #   - name: Build geos
-  #     if: steps.cache-geos.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:geos-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:geos-clean iricdev.proj
-
-  #   - name: Cache libpng
-  #     id: cache-libpng
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
-  #       key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
-
-  #   - name: Build libpng           # depends on hdf5
-  #     if: steps.cache-libpng.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:libpng-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:libpng-clean iricdev.proj
-
-  #   - name: Cache proj
-  #     id: cache-proj
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
-  #       key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
-
-  #   - name: Build proj             # depends on sqlite libtiff
-  #     if: steps.cache-proj.outputs.cache-hit != 'true'
-  #     shell: cmd
-  #     run: |
-  #       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-  #       msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
-  #       msbuild /noLogo /maxCpuCount /target:proj-clean iricdev.proj
 
   #   - name: Cache gdal
   #     id: cache-gdal
