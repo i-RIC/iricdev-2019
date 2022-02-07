@@ -61,3 +61,6 @@ mkdir [prepost-gui-root]\libdlls\release
 :: if building tools
 add install\hdf5-[HDF5_VER]\release\bin to "Path"
 ```
+
+### Github actions build times:
+![image](https://user-images.githubusercontent.com/7538707/152712060-e23fdcc3-0f20-4ec5-8f4c-79863cf8b7e0.png)
