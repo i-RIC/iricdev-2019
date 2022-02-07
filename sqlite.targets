@@ -6,6 +6,11 @@
     <sqlite_top_dir>..\..\..\src\sqlite-src-3320300</sqlite_top_dir>
   </PropertyGroup>
 
+  <Target Name="sqlite-clean">
+    <RemoveDir Directories="$(SRC_DIR)\sqlite-src-3320300" />
+    <Delete Files="$(DOWNLOADS_DIR)\sqlite-src-3320300.zip" />
+  </Target>
+
   <Target Name="sqlite-build" DependsOnTargets="sqlite-build-debug;sqlite-build-release" />
 
   <Target Name="sqlite-build-release" Inputs="sqlite.targets" Outputs="$(INSTALL_DIR)\sqlite-src-3320300\release\sqlite3.lib" DependsOnTargets="sqlite-src">

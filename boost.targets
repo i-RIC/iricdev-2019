@@ -4,6 +4,10 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="boost-clean">
+    <Delete Files="$(DOWNLOADS_DIR)\boost_$(BOOST_UVER).7z" />
+  </Target>
+
   <Target Name="boost-src" DependsOnTargets="boost-download" Condition="!Exists('$(INSTALL_DIR)\boost-$(BOOST_VER)')">
     <Exec Command="7z x $(DOWNLOADS_DIR)\boost_$(BOOST_UVER).7z -o$(INSTALL_DIR)" />
     <Exec Command="ren $(INSTALL_DIR)\boost_$(BOOST_UVER) boost-$(BOOST_VER)" />

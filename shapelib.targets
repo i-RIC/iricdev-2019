@@ -4,6 +4,11 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="shapelib-clean">
+    <RemoveDir Directories="$(SRC_DIR)\shapelib-$(SHAPELIB_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\shapelib-$(SHAPELIB_VER).zip" />
+  </Target>
+
   <Target Name="shapelib-build" DependsOnTargets="shapelib-build-debug;shapelib-build-release" />
 
   <Target Name="shapelib-build-release" DependsOnTargets="shapelib-src" Condition="!Exists('$(INSTALL_DIR)\shapelib-$(SHAPELIB_VER)\release')">

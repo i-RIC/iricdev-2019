@@ -4,6 +4,12 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="expat-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\expat-$(EXPAT_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\expat-$(EXPAT_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\expat-$(EXPAT_VER).zip" />
+  </Target>
+
   <Target Name="expat-build" DependsOnTargets="expat-build-debug;expat-build-release" />
 
   <Target Name="expat-build-debug" Inputs="expat.targets" Outputs="$(INSTALL_DIR)\expat-$(EXPAT_VER)\debug\lib\expatd.lib" DependsOnTargets="expat-src">
