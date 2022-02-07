@@ -4,9 +4,15 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="udunits-clean" DependsOnTargets="expat-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\udunits-$(UDUNITS_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\udunits-$(UDUNITS_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\udunits-$(UDUNITS_VER).zip" />
+  </Target>
+
   <Target Name="udunits-build" DependsOnTargets="udunits-build-debug;udunits-build-release" />
 
-  <Target Name="udunits-build-debug" Inputs="udunits.targets;udunits.cmake" Outputs="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\debug\lib\udunits2.lib" DependsOnTargets="udunits-src;expat-build-debug">
+  <Target Name="udunits-build-debug" Inputs="udunits.targets;udunits.cmake;$(INSTALL_DIR)\expat-$(EXPAT_VER)\debug\lib\expatd.lib" Outputs="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\debug\lib\udunits2.lib" DependsOnTargets="udunits-src">
     <PropertyGroup>
       <config>debug</config>
       <udunits_inst>$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\$(config)</udunits_inst>
@@ -15,7 +21,7 @@
     <Exec Command="ctest -S udunits.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-udunits-debug.log" />
   </Target>
 
-  <Target Name="udunits-build-release" Inputs="udunits.targets;udunits.cmake" Outputs="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\release\lib\udunits2.lib" DependsOnTargets="udunits-src;expat-build-release">
+  <Target Name="udunits-build-release" Inputs="udunits.targets;udunits.cmake;$(INSTALL_DIR)\expat-$(EXPAT_VER)\release\lib\expat.lib" Outputs="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\release\lib\udunits2.lib" DependsOnTargets="udunits-src">
     <PropertyGroup>
       <config>release</config>
       <udunits_inst>$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\$(config)</udunits_inst>

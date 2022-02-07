@@ -4,15 +4,21 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="netcdf-c-clean" DependsOnTargets="hdf5-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\netcdf-c-$(NETCDF_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\netcdf-c-$(NETCDF_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\netcdf-c-$(NETCDF_VER).zip" />
+  </Target>
+
   <Target Name="netcdf-c-build" DependsOnTargets="netcdf-c-build-debug;netcdf-c-build-release" />
 
-  <Target Name="netcdf-c-build-debug" Inputs="netcdf-c.targets;netcdf-c.cmake" Outputs="$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\debug\lib\netcdf.lib" DependsOnTargets="netcdf-c-src;hdf5-build-debug">
+  <Target Name="netcdf-c-build-debug" Inputs="netcdf-c.targets;netcdf-c.cmake;$(INSTALL_DIR)\hdf5-$(HDF5_VER)\lib\hdf5_D.lib" Outputs="$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\debug\lib\netcdf.lib" DependsOnTargets="netcdf-c-src">
     <RemoveDir Directories="$(BUILD_DIR)\netcdf-c-$(NETCDF_VER)\debug" />
     <RemoveDir Directories="$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\debug" />
     <Exec Command="ctest -S netcdf-c.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-netcdf-c-debug.log" />
   </Target>
 
-  <Target Name="netcdf-c-build-release" Inputs="netcdf-c.targets;netcdf-c.cmake" Outputs="$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\release\lib\netcdf.lib" DependsOnTargets="netcdf-c-src;hdf5-build-release">
+  <Target Name="netcdf-c-build-release" Inputs="netcdf-c.targets;netcdf-c.cmake;$(INSTALL_DIR)\hdf5-$(HDF5_VER)\lib\hdf5.lib" Outputs="$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\release\lib\netcdf.lib" DependsOnTargets="netcdf-c-src">
     <RemoveDir Directories="$(BUILD_DIR)\netcdf-c-$(NETCDF_VER)\release" />
     <RemoveDir Directories="$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\release" />
     <Exec Command="ctest -S netcdf-c.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-netcdf-c-release.log" />

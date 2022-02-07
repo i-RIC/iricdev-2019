@@ -4,6 +4,12 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <Target Name="proj-clean" DependsOnTargets="sqlite-clean;libtiff-clean">
+    <RemoveDir Directories="$(BUILD_DIR)\proj-$(PROJ_VER)" />
+    <RemoveDir Directories="$(SRC_DIR)\proj-$(PROJ_VER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\proj-$(PROJ_VER).zip" />
+  </Target>
+
   <Target Name="proj-build" DependsOnTargets="proj-build-debug;proj-build-release" />
 
   <Target Name="proj-build-release" Inputs="proj.targets;proj.cmake" Outputs="$(INSTALL_DIR)\proj-$(PROJ_VER)\release\lib\proj.lib" DependsOnTargets="proj-src;sqlite-build-release;libtiff-build-release">

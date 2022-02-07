@@ -7,6 +7,11 @@
     <SRC_DIR Condition=" '$(SRC_DIR)' == '' ">lib\src</SRC_DIR>
   </PropertyGroup>
 
+  <Target Name="openssl-clean">
+    <RemoveDir Directories="$(SRC_DIR)\openssl-OpenSSL_$(OPENSSL_UVER)" />
+    <Delete Files="$(DOWNLOADS_DIR)\OpenSSL_$(OPENSSL_UVER).zip" />
+  </Target>
+
   <Target Name="openssl-build" DependsOnTargets="openssl-build-debug;openssl-build-release" />
 
   <Target Name="openssl-build-release" Inputs="openssl.targets" Outputs="$(INSTALL_DIR)\openssl-$(OPENSSL_VER)\release\bin\libeay32.dll" DependsOnTargets="openssl-src">
