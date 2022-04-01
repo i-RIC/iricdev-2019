@@ -1,5 +1,4 @@
-## iricdev-2019 [![Build status](https://ci.appveyor.com/api/projects/status/duj05l5t7uqfrypw/branch/2019?svg=true)](https://ci.appveyor.com/project/i-RIC/iricdev-2019/branch/2019)
-
+## iricdev-2019 ![workflow](https://github.com/i-RIC/iricdev-2019/actions/workflows/build.yml/badge.svg)
 Build libraries needed to build iRIC on Windows
 
 ### To clear build cache:
