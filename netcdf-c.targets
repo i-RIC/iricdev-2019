@@ -14,7 +14,7 @@
   <!-- @(netcdf-c-build-release-deps) -->
   <ItemGroup>
     <netcdf-c-build-release-deps Include="netcdf-c-src"/>
-    <netcdf-c-build-debug-deps Include="hdf5-release-debug" Condition=" '$(UseDeps)' == 'Yes' " />
+    <netcdf-c-build-release-deps Include="hdf5-build-release" Condition=" '$(UseDeps)' == 'Yes' " />
   </ItemGroup>
 
 
