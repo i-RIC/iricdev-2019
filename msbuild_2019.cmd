@@ -7,9 +7,9 @@ call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary
 set PATH=%PATH%;C:\Qt\Tools\Ninja
 popd
 call versions.cmd
-@REM set GENERATOR="Visual Studio 16 2019"
-@REM set SGEN=vs2019-x64
-set GENERATOR="Ninja Multi-Config"
-set SGEN=ninja-x64
-msbuild -noLogo -maxCpuCount -target:all iricdev.proj
+set GENERATOR="Visual Studio 16 2019"
+set SGEN=vs2019-x64
+@REM set GENERATOR="Ninja Multi-Config"
+@REM set SGEN=ninja-x64
+msbuild -noLogo -maxCpuCount -v:d -p:UseDeps=Yes -target:all iricdev.proj
 endlocal
