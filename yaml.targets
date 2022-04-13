@@ -4,19 +4,23 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <PropertyGroup>
+    <GENERATOR_NO_QUOTES>$([System.String]::Copy($(GENERATOR)).Replace('"','') )</GENERATOR_NO_QUOTES>
+  </PropertyGroup>
+
   <!-- yaml-cpp no longer depends on Boost since version 0.6.0 -->
   <Target Name="yaml-cpp-build" DependsOnTargets="yaml-cpp-build-debug;yaml-cpp-build-release" />
 
   <Target Name="yaml-cpp-build-debug" Inputs="yaml.targets;yaml.cmake" Outputs="$(INSTALL_DIR)\yaml-cpp-$(YAML_CPP_VER)\debug\lib\yaml-cpp.lib" DependsOnTargets="yaml-cpp-src">
     <RemoveDir Directories="$(BUILD_DIR)\yaml-cpp-$(YAML_CPP_VER)\debug" />
     <RemoveDir Directories="$(INSTALL_DIR)\yaml-cpp-$(YAML_CPP_VER)\debug" />
-    <Exec Command="ctest -S yaml.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-yaml-cpp-debug.log" />
+    <Exec Command="ctest -S yaml.cmake -DCONF_DIR:STRING=debug -D%22CTEST_CMAKE_GENERATOR:STRING=$(GENERATOR_NO_QUOTES)%22 -C Debug -VV -O $(LOG_DIR)\$(SGEN)-yaml-cpp-debug.log" />
   </Target>
 
   <Target Name="yaml-cpp-build-release" Inputs="yaml.targets;yaml.cmake" Outputs="$(INSTALL_DIR)\yaml-cpp-$(YAML_CPP_VER)\release\lib\yaml-cpp.lib" DependsOnTargets="yaml-cpp-src">
     <RemoveDir Directories="$(BUILD_DIR)\yaml-cpp-$(YAML_CPP_VER)\release" />
     <RemoveDir Directories="$(INSTALL_DIR)\yaml-cpp-$(YAML_CPP_VER)\release" />
-    <Exec Command="ctest -S yaml.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-yaml-cpp-release.log" />
+    <Exec Command="ctest -S yaml.cmake -DCONF_DIR:STRING=release -D%22CTEST_CMAKE_GENERATOR:STRING=$(GENERATOR_NO_QUOTES)%22 -C Release -VV -O $(LOG_DIR)\$(SGEN)-yaml-cpp-release.log" />
   </Target>
 
   <Target Name="yaml-cpp-src" DependsOnTargets="yaml-cpp-download" Condition="!Exists('$(SRC_DIR)\yaml-cpp-$(YAML_CPP_VER)')">
