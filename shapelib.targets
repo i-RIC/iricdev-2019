@@ -1,4 +1,4 @@
-<Project DefaultTargets="gdal-build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="shapelib-build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Import Project="programs.prop" Condition="'$(CURL)'==''" />
 
