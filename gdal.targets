@@ -34,6 +34,20 @@
     <makefile>$(TOP_DIR)\$(SRC_DIR)\gdal-$(GDAL_VER)\makefile.vc</makefile>
   </PropertyGroup>
 
+  <!-- @(gdal-build-debug-deps) -->
+  <ItemGroup>
+    <gdal-build-debug-deps Include="gdal-src"/>
+    <gdal-build-debug-deps Include="netcdf-c-build-debug" Condition=" '$(UseDeps)' == 'Yes' " />
+    <gdal-build-debug-deps Include="proj-build-debug" Condition=" '$(UseDeps)' == 'Yes' " />
+  </ItemGroup>
+
+  <!-- @(gdal-build-release-deps) -->
+  <ItemGroup>
+    <gdal-build-release-deps Include="gdal-src"/>
+    <gdal-build-release-deps Include="netcdf-c-build-release" Condition=" '$(UseDeps)' == 'Yes' " />
+    <gdal-build-release-deps Include="proj-build-release" Condition=" '$(UseDeps)' == 'Yes' " />
+  </ItemGroup>
+
   <Target Name="gdal-clean" DependsOnTargets="netcdf-c-clean;proj-clean">
     <Exec WorkingDirectory="$(gdal_src)" Command="nmake -f $(makefile) $(gdal_opts_release) clean"  />
     <Exec WorkingDirectory="$(gdal_src)" Command="nmake -f $(makefile) $(gdal_opts_debug) clean"  />
@@ -42,7 +56,7 @@
 
   <Target Name="gdal-build" DependsOnTargets="gdal-build-debug;gdal-build-release" />
 
-  <Target Name="gdal-build-release" Inputs="gdal.targets;$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\release\lib\netcdf.lib;$(INSTALL_DIR)\proj-$(PROJ_VER)\release\lib\proj.lib" Outputs="$(INSTALL_DIR)\gdal-$(GDAL_VER)\release\lib\gdal_i.lib" DependsOnTargets="gdal-src">
+  <Target Name="gdal-build-release" Inputs="gdal.targets;$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\release\lib\netcdf.lib;$(INSTALL_DIR)\proj-$(PROJ_VER)\release\lib\proj.lib" Outputs="$(INSTALL_DIR)\gdal-$(GDAL_VER)\release\lib\gdal_i.lib" DependsOnTargets="@(gdal-build-release-deps)">
     <PropertyGroup>
       <gdal_home>$(gdal_inst)\release</gdal_home>
     </PropertyGroup>
@@ -61,7 +75,7 @@
     <Exec WorkingDirectory="$(gdal_src)" Command="nmake -f $(makefile) $(gdal_opts_release) devinstall" />
   </Target>
 
-  <Target Name="gdal-build-debug" Inputs="gdal.targets;$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\debug\lib\netcdf.lib;$(INSTALL_DIR)\proj-$(PROJ_VER)\debug\lib\proj_d.lib" Outputs="$(INSTALL_DIR)\gdal-$(GDAL_VER)\debug\lib\gdal_i.lib" DependsOnTargets="gdal-src">
+  <Target Name="gdal-build-debug" Inputs="gdal.targets;$(INSTALL_DIR)\netcdf-c-$(NETCDF_VER)\debug\lib\netcdf.lib;$(INSTALL_DIR)\proj-$(PROJ_VER)\debug\lib\proj_d.lib" Outputs="$(INSTALL_DIR)\gdal-$(GDAL_VER)\debug\lib\gdal_i.lib" DependsOnTargets="@(gdal-build-debug-deps)">
     <PropertyGroup>
       <gdal_home>$(gdal_inst)\debug</gdal_home>
     </PropertyGroup>

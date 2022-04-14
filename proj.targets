@@ -4,6 +4,20 @@
 
   <Import Project="directories.prop" Condition="'$(TOP_DIR)'==''" />
 
+  <!-- @(proj-build-debug-deps) -->
+  <ItemGroup>
+    <proj-build-debug-deps Include="proj-src"/>
+    <proj-build-debug-deps Include="sqlite-build-debug" Condition=" '$(UseDeps)' == 'Yes' " />
+    <proj-build-debug-deps Include="libtiff-build-debug" Condition=" '$(UseDeps)' == 'Yes' " />
+  </ItemGroup>
+
+  <!-- @(proj-build-release-deps) -->
+  <ItemGroup>
+    <proj-build-release-deps Include="proj-src"/>
+    <proj-build-release-deps Include="sqlite-build-release" Condition=" '$(UseDeps)' == 'Yes' " />
+    <proj-build-release-deps Include="libtiff-build-release" Condition=" '$(UseDeps)' == 'Yes' " />
+  </ItemGroup>
+
   <Target Name="proj-clean" DependsOnTargets="sqlite-clean;libtiff-clean">
     <RemoveDir Directories="$(BUILD_DIR)\proj-$(PROJ_VER)" />
     <RemoveDir Directories="$(SRC_DIR)\proj-$(PROJ_VER)" />
@@ -12,13 +26,13 @@
 
   <Target Name="proj-build" DependsOnTargets="proj-build-debug;proj-build-release" />
 
-  <Target Name="proj-build-release" Inputs="proj.targets;proj.cmake" Outputs="$(INSTALL_DIR)\proj-$(PROJ_VER)\release\lib\proj.lib" DependsOnTargets="proj-src;sqlite-build-release;libtiff-build-release">
+  <Target Name="proj-build-release" Inputs="proj.targets;proj.cmake" Outputs="$(INSTALL_DIR)\proj-$(PROJ_VER)\release\lib\proj.lib" DependsOnTargets="@(proj-build-release-deps)">
     <RemoveDir Directories="$(BUILD_DIR)\proj-$(PROJ_VER)\release" />
     <RemoveDir Directories="$(INSTALL_DIR)\proj-$(PROJ_VER)\release" />
     <Exec Command="ctest -S proj.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-proj-release.log" />
   </Target>
 
-  <Target Name="proj-build-debug" Inputs="proj.targets;proj.cmake" Outputs="$(INSTALL_DIR)\proj-$(PROJ_VER)\debug\lib\proj_d.lib" DependsOnTargets="proj-src;sqlite-build-debug;libtiff-build-debug">
+  <Target Name="proj-build-debug" Inputs="proj.targets;proj.cmake" Outputs="$(INSTALL_DIR)\proj-$(PROJ_VER)\debug\lib\proj_d.lib" DependsOnTargets="@(proj-build-debug-deps)">
     <RemoveDir Directories="$(BUILD_DIR)\proj-$(PROJ_VER)\debug" />
     <RemoveDir Directories="$(INSTALL_DIR)\proj-$(PROJ_VER)\debug" />
     <Exec Command="ctest -S proj.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-proj-debug.log" />
