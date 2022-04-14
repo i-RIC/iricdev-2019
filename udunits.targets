@@ -25,20 +25,14 @@
   <Target Name="udunits-build" DependsOnTargets="udunits-build-debug;udunits-build-release" />
 
   <Target Name="udunits-build-debug" Inputs="udunits.targets;udunits.cmake;$(INSTALL_DIR)\expat-$(EXPAT_VER)\debug\lib\expatd.lib" Outputs="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\debug\lib\udunits2.lib" DependsOnTargets="@(udunits-build-debug-deps)">
-    <PropertyGroup>
-      <config>debug</config>
-      <udunits_inst>$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\$(config)</udunits_inst>
-    </PropertyGroup>
-    <RemoveDir Directories="$(udunits_inst)" />
+    <RemoveDir Directories="$(BUILD_DIR)\udunits-$(UDUNITS_VER)" />
+    <RemoveDir Directories="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\debug" />
     <Exec Command="ctest -S udunits.cmake -DCONF_DIR:STRING=debug -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Debug -VV -O $(LOG_DIR)\$(SGEN)-udunits-debug.log" />
   </Target>
 
   <Target Name="udunits-build-release" Inputs="udunits.targets;udunits.cmake;$(INSTALL_DIR)\expat-$(EXPAT_VER)\release\lib\expat.lib" Outputs="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\release\lib\udunits2.lib" DependsOnTargets="@(udunits-build-release-deps)">
-    <PropertyGroup>
-      <config>release</config>
-      <udunits_inst>$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\$(config)</udunits_inst>
-    </PropertyGroup>
-    <RemoveDir Directories="$(udunits_inst)" />
+    <RemoveDir Directories="$(BUILD_DIR)\udunits-$(UDUNITS_VER)" />
+    <RemoveDir Directories="$(INSTALL_DIR)\udunits-$(UDUNITS_VER)\release" />
     <Exec Command="ctest -S udunits.cmake -DCONF_DIR:STRING=release -DCTEST_CMAKE_GENERATOR:STRING=$(GENERATOR) -C Release -VV -O $(LOG_DIR)\$(SGEN)-udunits-release.log" />
   </Target>
 
