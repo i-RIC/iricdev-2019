@@ -7,7 +7,7 @@ skip_commits:
 
 branches:
   only:
-  - DISABLED_FOR_NOW
+  - 2019
 
 # QT 5.14 is only available with VS2019 on appveyor
 image: Visual Studio 2019
