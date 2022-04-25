@@ -445,7 +445,8 @@ foreach($componentGroup in $component_groups) {
         }
     }
 }
-GetChildItem $installDir
+Get-ChildItem $installDir
+Get-ChildItem $installDir\5.15.2\
 Write-Host "Qt 5.14.2 and Qt 5.15.2 LTS installed" -ForegroundColor Green
 return
 
