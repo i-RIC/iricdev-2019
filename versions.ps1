@@ -8,7 +8,7 @@
 # they have a _UVER suffix
 $uvers = "BOOST", "EXPAT", "OPENSSL"
 
-(Get-Content .\versions.cmd) | Foreach-Object {
+(Get-Content "$PSScriptRoot\versions.cmd") | Foreach-Object {
     if ($_ -imatch "^set (?<var>.*)_VER=(?<val>.*)$") {
         [System.Environment]::SetEnvironmentVariable($matches['var'] + "_VER",$matches['val'])
         if ($uvers -contains $matches['var']) {
