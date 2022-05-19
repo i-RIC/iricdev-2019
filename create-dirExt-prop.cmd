@@ -34,10 +34,10 @@ call versions.cmd
 @echo.netcdf   = %topdir%lib/install/netcdf-c-%NETCDF_VER%/debug/bin/
 @echo.openssl  = %topdir%lib/install/openssl-%OPENSSL_VER%/debug/bin/
 @echo.poco     = %topdir%lib/install/poco-%POCO_VER%/bin/
-@echo.proj     = %topdir%lib/install/proj-%PROJ_VER%/release/bin/
+@echo.proj     = %topdir%lib/install/proj-%PROJ_VER%/debug/bin/
 @echo.qwt      = %topdir%lib/install/Qwt-%QWT_VER%/lib/
 @echo.shapelib = %topdir%lib/install/shapelib-%SHAPELIB_VER%/debug/
-@echo.sqlite3  = %topdir%lib/install/sqlite-src-3320300/release/
+@echo.sqlite3  = %topdir%lib/install/sqlite-src-3320300/debug/
 @echo.szip     = %topdir%lib/install/hdf5-%HDF5_VER%/bin/
 @echo.tiff     = %topdir%lib/install/tiff-%LIBTIFF_VER%/debug/bin/
 @echo.udunits  = %topdir%lib/install/udunits-%UDUNITS_VER%/debug/bin/
