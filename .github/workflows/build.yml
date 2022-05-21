@@ -13,6 +13,8 @@ on:
 env:
   GENERATOR: Ninja Multi-Config
   SGEN: ninja-x64
+  PYTHON_INSTALL_DIR: C:\Python-x64
+  PYTHON_VERSION: 3.8.10
   # @TODO change ${{runner.os}} to ${{runner.env???}} -> vs2019-x64
 
 jobs:
@@ -151,7 +153,7 @@ jobs:
   cache-iriclib:
   # @todo 29m 11s
     runs-on: windows-2019
-    needs: [cache-hdf5, cache-poco]
+    needs: [cache-hdf5, cache-poco, cache-python-with-debug-symbols]
 
     steps:
       - uses: actions/checkout@v2
@@ -178,6 +180,13 @@ jobs:
           path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
           key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
 
+      - name: Cache python
+        uses: actions/cache@v1.1.2
+        id: cache-python
+        with:
+          path: '${{ env.PYTHON_INSTALL_DIR }}'
+          key: '${{ runner.os }}-cache-python-v${{ env.PYTHON_VERSION }}-amd64'
+
       - name: Cache iriclib
         id: cache-iriclib
         uses: actions/cache@v2
@@ -185,18 +194,43 @@ jobs:
           path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
           key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
 
-      - name: Build iriclib
+      # - name: Build iriclib
+      #   if: steps.cache-iriclib.outputs.cache-hit != 'true'
+      #   shell: cmd
+      #   run: |
+      #     call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      #     msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj /fileLogger
+
+      - name: Get iriclib source
         if: steps.cache-iriclib.outputs.cache-hit != 'true'
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          msbuild /noLogo /maxCpuCount /target:iriclib-build iricdev.proj /fileLogger
+          msbuild /noLogo /maxCpuCount /target:iriclib-src iricdev.proj /fileLogger
 
-      - uses: actions/upload-artifact@v2
+      - name: Build iriclib
         if: steps.cache-iriclib.outputs.cache-hit != 'true'
-        with:
-          name: iriclib-build.log
-          path: msbuild.log
+        shell: cmd
+        env:
+          preset: build-github-actions
+          instdir:  ${{ github.workspace }}/lib/install/iriclib-${{ env.IRICLIB_VER }}
+          builddir: ${{ github.workspace }}/lib/build/iriclib-${{ env.IRICLIB_VER }}
+          srcdir:   ${{ github.workspace }}/lib/src/iriclib-${{ env.IRICLIB_VER }}
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cmake -E copy iriclib.CMakePresets.json ${{ env.srcdir }}/CMakePresets.json
+          cd ${{ github.workspace }}\lib\src\iriclib-${{ env.IRICLIB_VER }}
+          cmake --preset ${{ env.preset }}
+          cmake --build --preset ${{ env.preset }} --config debug
+          cmake --install ${{ env.builddir }} --config debug
+          cmake --build --preset ${{ env.preset }} --config release
+          cmake --install ${{ env.builddir }} --config release
+
+      # - uses: actions/upload-artifact@v2
+      #   if: steps.cache-iriclib.outputs.cache-hit != 'true'
+      #   with:
+      #     name: iriclib-build.log
+      #     path: msbuild.log
 
   cache-libpng:
   # 1m 13s
@@ -408,6 +442,44 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:proj-build iricdev.proj
+
+  # based on https://github.com/actions/virtual-environments/issues/786#issuecomment-620524456
+  cache-python-with-debug-symbols:
+  # 10m 19s
+    runs-on: windows-2019
+
+    steps:
+      - name: Cache python
+        uses: actions/cache@v1.1.2
+        id: cache-python
+        with:
+          path: '${{ env.PYTHON_INSTALL_DIR }}'
+          key: '${{ runner.os }}-cache-python-v${{ env.PYTHON_VERSION }}-amd64'
+
+      - name: Download Python
+        uses: carlosperate/download-file-action@v1.0.3
+        id: download-python
+        with:
+         file-url: 'https://www.python.org/ftp/python/${{ env.PYTHON_VERSION }}/python-${{ env.PYTHON_VERSION }}-amd64.exe'
+         file-name: 'python-${{ env.PYTHON_VERSION }}-amd64.exe'
+         location: '${{ runner.workspace }}\dl\'
+        if: steps.cache-python.outputs.cache-hit != 'true'          
+
+      # if this step fails see https://github.com/actions/setup-python#windows
+      - name: Install Python debug (x64)   #   we need debug binaries and precompiled standard libraries
+        run: |
+          Start-Process -FilePath "${{ runner.workspace }}\dl\python-${{ env.PYTHON_VERSION }}-amd64.exe" -ArgumentList "/quiet Include_debug=1 Include_dev=1 Include_lib=1 Include_pip=1 PrependPath=1 CompileAll=1 InstallAllUsers=0 TargetDir=${{ env.PYTHON_INSTALL_DIR }}\" -Verb runas -Wait
+        if: runner.os == 'Windows' && steps.cache-python.outputs.cache-hit != 'true'
+        shell: pwsh
+
+      - name: Display Python version
+        if: runner.os == 'Windows'
+        run: ${{ env.PYTHON_INSTALL_DIR }}\python -c "import sys; print(sys.version)"
+        shell: cmd
+
+      - name: List linker libs
+        if: runner.os == 'Windows'
+        run: ${{ env.PYTHON_INSTALL_DIR }}\python -c "import sysconfig;import os; print(os.listdir(sysconfig.get_config_vars('prefix')[0] + '/libs'))"
 
   cache-qt:
   # 13m 17s

@@ -1,0 +1,29 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 18,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "build-github-actions",
+      "displayName": "build-github-actions",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/../../build/iriclib-$env{IRICLIB_VER}",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX" : "${sourceDir}/../../install/iriclib-$env{IRICLIB_VER}",
+        "IRICLIB_FORTRAN_TESTING": "OFF",
+        "HDF5_DIR": "${sourceDir}/../../install/hdf5-$env{HDF5_VER}/cmake/hdf5",
+        "PocoFoundation_DIR": "${sourceDir}/../../install/poco-$env{POCO_VER}/lib/cmake/Poco",
+        "Python_ROOT_DIR": "$env{PYTHON_INSTALL_DIR}"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-github-actions",
+      "configurePreset": "build-github-actions"
+    }
+  ]
+}
