@@ -211,7 +211,7 @@ jobs:
           srcdir:   ${{ github.workspace }}/lib/src/iriclib-${{ env.IRICLIB_VER }}
         run: |
           call "%VS2019INSTALLDIR%\VC\Auxiliary\Build\vcvars64.bat"
-          copy CMakePresets-iriclib.json ${{ env.srcdir }}/CMakePresets-iriclib.json
+          copy CMakePresets-iriclib.json ${{ env.srcdir }}/CMakePresets.json
           cd ${{ env.srcdir }}
           cmake --preset ${{ env.preset }}
           cmake --build --preset ${{ env.preset }} --config debug
