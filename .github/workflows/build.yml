@@ -180,6 +180,13 @@ jobs:
           path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
           key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
 
+      - name: Cache python
+        uses: actions/cache@v1.1.2
+        id: cache-python
+        with:
+          path: '${{ env.PYTHON_INSTALL_DIR }}'
+          key: '${{ runner.os }}-cache-python-v${{ env.PYTHON_VERSION }}-amd64'
+
       - name: Cache iriclib
         id: cache-iriclib
         uses: actions/cache@v2
@@ -446,7 +453,7 @@ jobs:
         uses: actions/cache@v1.1.2
         id: cache-python
         with:
-          path: '${{ env.PYTHON_INSTALL_DIR }}\'
+          path: '${{ env.PYTHON_INSTALL_DIR }}'
           key: '${{ runner.os }}-cache-python-v${{ env.PYTHON_VERSION }}-amd64'
 
       - name: Download Python
