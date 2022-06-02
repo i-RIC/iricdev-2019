@@ -165,6 +165,13 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           msbuild /noLogo /maxCpuCount /target:hdf5-build iricdev.proj
 
+      - name: Archive build artifacts
+        if: ${{ always() && steps.cache-hdf5.outputs.cache-hit != 'true' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: BuildLogs
+          path: lib/build/hdf5-${{env.HDF5_VER}}/**/BuildLog.htm
+
   cache-iriclib:
   # @todo 29m 11s
     runs-on: windows-2019
