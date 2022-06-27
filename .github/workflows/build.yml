@@ -965,3 +965,37 @@ jobs:
           # display download url
           Write-Output "$((($release.Content | ConvertFrom-Json).assets).browser_download_url)"
           Get-FileHash "iricdev-vs2019-build-cache.7z"
+
+  fire-prepost-gui-build-on-appveyor:
+    if: ${{ github.repository == 'i-RIC/iricdev-2019' && github.ref_name == '2019' && github.ref_type == 'branch' }}
+    runs-on: windows-2019
+    needs: [create-release]
+
+    steps:
+      - name: Start build on appveyor i-RIC/prepost-gui/develop_v4
+        run: |
+          # Create secret in Security->Actions->New repository secret
+          # Name: SECRET_IRIC_ACCESS_TOKEN
+          # and setting Value from
+          # Bearer token via https://ci.appveyor.com/api-keys
+          # with account set to i-RIC 
+
+          # headers hash table
+          $headers = @{}
+          $headers['Authorization'] = "Bearer ${{secrets.SECRET_IRIC_ACCESS_TOKEN}}"
+          $headers['Content-type']  = "application/json"
+          
+          # POST /api/builds
+          # see https://www.appveyor.com/docs/api/projects-builds/#start-build-of-branch-most-recent-commit
+          # build hash table
+          $build = @{}
+          $build['accountName'] = "i-RIC"
+          $build['projectSlug'] = "prepost-gui"
+          $build['branch']      = "develop_v4"
+          
+          # convert build hash table to json
+          $build_json = $build | ConvertTo-Json
+
+          # POST
+          $response = Invoke-WebRequest -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -Body $build_json
+          $response.StatusDescription
