@@ -314,6 +314,10 @@ jobs:
           path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
           key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
 
+      - name: Remove Strawberry Perl
+        if: steps.cache-libtiff.outputs.cache-hit != 'true'
+        run: Remove-Item -Recurse -Force C:\Strawberry
+
       - name: Build libtiff
         if: steps.cache-libtiff.outputs.cache-hit != 'true'
         shell: cmd
