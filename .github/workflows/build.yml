@@ -204,7 +204,7 @@ jobs:
           key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
 
       - name: Cache python
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v3
         id: cache-python
         with:
           path: '${{ env.PYTHON_INSTALL_DIR }}'
@@ -477,14 +477,14 @@ jobs:
 
     steps:
       - name: Cache python
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v3
         id: cache-python
         with:
           path: '${{ env.PYTHON_INSTALL_DIR }}'
           key: '${{ runner.os }}-cache-python-v${{ env.PYTHON_VERSION }}-amd64'
 
       - name: Download Python
-        uses: carlosperate/download-file-action@v1.0.3
+        uses: carlosperate/download-file-action@v2
         id: download-python
         with:
          file-url: 'https://www.python.org/ftp/python/${{ env.PYTHON_VERSION }}/python-${{ env.PYTHON_VERSION }}-amd64.exe'
