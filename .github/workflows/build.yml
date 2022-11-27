@@ -31,19 +31,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache expat
         id: cache-expat
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
           key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
@@ -61,33 +61,33 @@ jobs:
     needs: [cache-netcdf-c, cache-proj]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache netcdf-c
         id: cache-netcdf-c
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
           key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
 
       - name: Cache proj
         id: cache-proj
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
           key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
 
       - name: Cache gdal
         id: cache-gdal
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
           key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
@@ -104,19 +104,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache geos
         id: cache-geos
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
           key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
@@ -133,19 +133,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache hdf5
         id: cache-hdf5
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
           key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
@@ -179,26 +179,26 @@ jobs:
     needs: [cache-hdf5, cache-poco, cache-python-with-debug-symbols]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache hdf5
         id: cache-hdf5
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
           key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
 
       - name: Cache poco
         id: cache-poco
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
           key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
@@ -212,7 +212,7 @@ jobs:
 
       - name: Cache iriclib
         id: cache-iriclib
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
           key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
@@ -261,26 +261,26 @@ jobs:
     needs: [cache-hdf5]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache hdf5
         id: cache-hdf5
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
           key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
 
       - name: Cache libpng
         id: cache-libpng
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
           key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
@@ -297,19 +297,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache libtiff
         id: cache-libtiff
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
           key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
@@ -331,26 +331,26 @@ jobs:
     needs: [cache-hdf5]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache hdf5
         id: cache-hdf5
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
           key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
 
       - name: Cache netcdf-c
         id: cache-netcdf-c
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
           key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
@@ -373,19 +373,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache openssl
         id: cache-openssl
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
           key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
@@ -402,19 +402,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache poco
         id: cache-poco
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
           key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
@@ -432,33 +432,33 @@ jobs:
     needs: [cache-libtiff, cache-sqlite]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache libtiff
         id: cache-libtiff
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
           key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
 
       - name: Cache sqlite
         id: cache-sqlite
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/sqlite-src-3320300
           key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
 
       - name: Cache proj
         id: cache-proj
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
           key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
@@ -513,14 +513,14 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Cache qt
         id: cache-qt
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: C:\Qt
           key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
@@ -535,26 +535,26 @@ jobs:
     needs: [cache-qt]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache qt
         id: cache-qt
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: C:\Qt
           key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
 
       - name: Cache qwt
         id: cache-qwt
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
           key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
@@ -573,19 +573,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache shapelib
         id: cache-shapelib
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
           key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
@@ -602,19 +602,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache sqlite
         id: cache-sqlite
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/sqlite-src-3320300
           key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
@@ -632,26 +632,26 @@ jobs:
     needs: [cache-expat]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache expat
         id: cache-expat
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
           key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
       - name: Cache udunits
         id: cache-udunits
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
           key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
@@ -669,26 +669,26 @@ jobs:
     needs: [cache-qt]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache qt
         id: cache-qt
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: C:\Qt
           key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
 
       - name: Cache vtk debug
         id: cache-vtk-debug
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/debug
           key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
@@ -708,26 +708,26 @@ jobs:
     needs: [cache-qt]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache qt
         id: cache-qt
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: C:\Qt
           key: ${{runner.os}}-qt-${{hashFiles('./scripts/Windows/install_qt*.ps1')}}
 
       - name: Cache vtk release
         id: cache-vtk-release
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/release
           key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
@@ -746,19 +746,19 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache yaml
         id: cache-yaml
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/yaml-cpp-${{env.YAML_CPP_VER}}
           key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
@@ -776,138 +776,138 @@ jobs:
     needs: [cache-expat, cache-gdal, cache-geos, cache-hdf5, cache-iriclib, cache-libpng, cache-libtiff, cache-netcdf-c, cache-openssl, cache-poco, cache-proj, cache-qwt, cache-shapelib, cache-sqlite, cache-udunits, cache-vtk-debug, cache-vtk-release, cache-yaml]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Init github env
         run: .\init.github_env.ps1 | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Setup path for msbuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1
         with:
           vs-version: '[16.9,17)'
 
       - name: Cache expat
         id: cache-expat
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/expat-${{env.EXPAT_VER}}
           key: ${{runner.os}}-expat-${{hashFiles('./expat.*')}}
 
       - name: Cache gdal
         id: cache-gdal
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/gdal-${{env.GDAL_VER}}
           key: ${{runner.os}}-gdal-${{hashFiles('./gdal.*')}}
 
       - name: Cache geos
         id: cache-geos
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/geos-${{env.GEOS_VER}}
           key: ${{runner.os}}-geos-${{hashFiles('./geos.*')}}
 
       - name: Cache hdf5
         id: cache-hdf5
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/hdf5-${{env.HDF5_VER}}
           key: ${{runner.os}}-hdf5-${{hashFiles('./hdf5.*')}}
 
       - name: Cache iriclib
         id: cache-iriclib
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/iriclib-${{env.IRICLIB_VER}}
           key: ${{runner.os}}-iriclib-${{hashFiles('./iriclib.*')}}
 
       - name: Cache libpng
         id: cache-libpng
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/libpng-${{env.LIBPNG_VER}}
           key: ${{runner.os}}-libpng-${{hashFiles('./libpng.*')}}
 
       - name: Cache libtiff
         id: cache-libtiff
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/tiff-${{env.LIBTIFF_VER}}
           key: ${{runner.os}}-libtiff-${{hashFiles('./libtiff.*')}}
 
       - name: Cache netcdf-c
         id: cache-netcdf-c
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/netcdf-c-${{env.NETCDF_VER}}
           key: ${{runner.os}}-netcdf-c-${{hashFiles('./netcdf-c.*')}}
 
       - name: Cache openssl
         id: cache-openssl
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/openssl-${{env.OPENSSL_VER}}
           key: ${{runner.os}}-openssl-${{hashFiles('./openssl.*')}}
 
       - name: Cache poco
         id: cache-poco
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/poco-${{env.POCO_VER}}
           key: ${{runner.os}}-poco-${{hashFiles('./poco.*')}}
 
       - name: Cache proj
         id: cache-proj
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/proj-${{env.PROJ_VER}}
           key: ${{runner.os}}-proj-${{hashFiles('./proj.*')}}
 
       - name: Cache qwt
         id: cache-qwt
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/Qwt-${{env.QWT_VER}}
           key: ${{runner.os}}-qwt-${{hashFiles('./qwt.*')}}
 
       - name: Cache shapelib
         id: cache-shapelib
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/shapelib-${{env.SHAPELIB_VER}}
           key: ${{runner.os}}-shapelib-${{hashFiles('./shapelib.*')}}
 
       - name: Cache sqlite
         id: cache-sqlite
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/sqlite-src-3320300
           key: ${{runner.os}}-sqlite-${{hashFiles('./sqlite.*')}}
 
       - name: Cache udunits
         id: cache-udunits
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/udunits-${{env.UDUNITS_VER}}
           key: ${{runner.os}}-udunits-${{hashFiles('./udunits.*')}}
 
       - name: Cache vtk debug
         id: cache-vtk-debug
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/debug
           key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
  
       - name: Cache vtk release
         id: cache-vtk-release
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/vtk-${{env.VTK_VER}}/release
           key: ${{runner.os}}-vtk-${{hashFiles('./vtk.*')}}
 
       - name: Cache yaml
         id: cache-yaml
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{github.workspace}}/lib/install/yaml-cpp-${{env.YAML_CPP_VER}}
           key: ${{runner.os}}-yaml-${{hashFiles('./yaml.*')}}
