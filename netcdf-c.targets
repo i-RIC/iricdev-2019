@@ -45,7 +45,8 @@
   <Target Name="netcdf-c-download" Condition="!Exists('$(DOWNLOADS_DIR)\netcdf-c-$(NETCDF_VER).zip')">
     <MakeDir Directories="$(DOWNLOADS_DIR)" />
     <Message Text="Downloading netcdf-c-$(NETCDF_VER).zip" />
-    <Exec Command="$(CURL) ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-c-$(NETCDF_VER).zip" WorkingDirectory="$(DOWNLOADS_DIR)" />
+    <Exec Command="$(CURL) https://github.com/Unidata/netcdf-c/archive/refs/tags/v$(NETCDF_VER).zip" WorkingDirectory="$(DOWNLOADS_DIR)" />
+    <Move SourceFiles="$(DOWNLOADS_DIR)\v$(NETCDF_VER).zip" DestinationFiles="$(DOWNLOADS_DIR)\netcdf-c-$(NETCDF_VER).zip" />
   </Target>
 
 </Project>
