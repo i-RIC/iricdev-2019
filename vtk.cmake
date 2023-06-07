@@ -27,6 +27,7 @@ set(BUILD_OPTIONS
 -DCMAKE_CXX_MP_NUM_PROCESSORS:STRING=$ENV{NUMBER_OF_PROCESSORS}
 -DVTK_Group_Qt:BOOL=ON
 -DModule_vtkGUISupportQtOpenGL:BOOL=ON
+-DModule_vtkIOExportOpenGL2:BOOL=ON
 )
 # -DModule_vtkGUISupportQt:BOOL=ON
 # -DModule_vtkGUISupportQtOpenGL:BOOL=ON
