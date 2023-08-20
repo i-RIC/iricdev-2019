@@ -1,5 +1,4 @@
 # versions
-include VERSIONS
 HDF5_MAJMIN := $(shell echo $(HDF5_VER) | sed -e 's/\./ /g' | awk '{ print $$1"."$$2 }')
 
 # programs
