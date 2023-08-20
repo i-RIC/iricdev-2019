@@ -13,8 +13,10 @@ LOG_DIR := logs
 SRC_DIR := lib/src
 
 # cmake
-GENERATOR := Unix Makefiles
-SGEN := make
+# GENERATOR := Unix Makefiles
+# SGEN := make
+GENERATOR := Ninja Multi-Config
+SGEN := ninja
 
 # environment
 export SGEN
@@ -24,14 +26,17 @@ all : $(INSTALL_DIR)/iriclib-$(IRICLIB_VER)/lib/libiriclibd.so $(INSTALL_DIR)/ir
 
 # iriclib
 
+
 export HDF5_VER HDF5_MAJMIN IRICLIB_VER POCO_VER
 
+iriclib-build : $(INSTALL_DIR)/iriclib-$(IRICLIB_VER)/lib/libiriclib.so $(INSTALL_DIR)/iriclib-$(IRICLIB_VER)/lib/libiriclibd.so
+	echo iriclib-build Done
 
-$(INSTALL_DIR)/iriclib-$(IRICLIB_VER)/lib/libiriclibd.so : $(SRC_DIR)/iriclib-$(IRICLIB_VER) $(INSTALL_DIR)/hdf5-$(HDF5_VER)/lib/libhdf5_debug.so $(INSTALL_DIR)/poco-$(POCO_VER)/lib/libPocoFoundationd.so
+iriclib-build-debug $(INSTALL_DIR)/iriclib-$(IRICLIB_VER)/lib/libiriclibd.so : $(SRC_DIR)/iriclib-$(IRICLIB_VER) $(INSTALL_DIR)/hdf5-$(HDF5_VER)/lib/libhdf5_debug.so $(INSTALL_DIR)/poco-$(POCO_VER)/lib/libPocoFoundationd.so
 	rm -rf $(BUILD_DIR)/iriclib-$(IRICLIB_VER)/debug
 	ctest -S iriclib.cmake -DCONF_DIR:STRING=debug -D"CTEST_CMAKE_GENERATOR:STRING=$(GENERATOR)" -C Debug -VV -O $(LOG_DIR)/$(SGEN)-iriclib-debug.log
 
-$(INSTALL_DIR)/iriclib-$(IRICLIB_VER)/lib/libiriclib.so : $(SRC_DIR)/iriclib-$(IRICLIB_VER) $(INSTALL_DIR)/hdf5-$(HDF5_VER)/lib/libhdf5.so $(INSTALL_DIR)/poco-$(POCO_VER)/lib/libPocoFoundation.so
+iriclib-build-release $(INSTALL_DIR)/iriclib-$(IRICLIB_VER)/lib/libiriclib.so : $(SRC_DIR)/iriclib-$(IRICLIB_VER) $(INSTALL_DIR)/hdf5-$(HDF5_VER)/lib/libhdf5.so $(INSTALL_DIR)/poco-$(POCO_VER)/lib/libPocoFoundation.so
 	rm -rf $(BUILD_DIR)/iriclib-$(IRICLIB_VER)/release
 	ctest -S iriclib.cmake -DCONF_DIR:STRING=release -D"CTEST_CMAKE_GENERATOR:STRING=$(GENERATOR)" -C Release -VV -O $(LOG_DIR)/$(SGEN)-iriclib-release.log
 
@@ -56,6 +61,9 @@ poco_opts += -D"CTEST_SOURCE_DIRECTORY:PATH=lib/src/poco-$(POCO_VER)"
 poco_opts_debug  = $(poco_opts)
 poco_opts_debug += -D"CTEST_BINARY_DIRECTORY:PATH=lib/build/poco-$(POCO_VER)/debug"
 poco_opts_debug += -D"CTEST_CMAKE_GENERATOR:STRING=$(GENERATOR)"
+
+poco-build : $(INSTALL_DIR)/poco-$(POCO_VER)/lib/libPocoFoundation.so $(INSTALL_DIR)/poco-$(POCO_VER)/lib/libPocoFoundationd.so
+	echo poco-build Done
 
 poco-build-debug $(INSTALL_DIR)/poco-$(POCO_VER)/lib/libPocoFoundationd.so : $(SRC_DIR)/poco-$(POCO_VER)
 	$(MKDIR) $(INSTALL_DIR)
