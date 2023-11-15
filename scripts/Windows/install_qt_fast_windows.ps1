@@ -422,11 +422,11 @@ $component_groups += @(
     }
 )
 
-# for iricdev install only 5.14.2 x64 and 5.15.2 x64 LTS
+# for iricdev install only 5.14.2 x64
 
 foreach($componentGroup in $component_groups) {
     if ($componentGroup.version) {
-        if ($componentGroup.version -and (($componentGroup.version -ne "5.14.2") -and ($componentGroup.version -ne "5.15.2"))) {
+        if ($componentGroup.version -and ($componentGroup.version -ne "5.14.2")) {
             continue
         }
         foreach($component in $componentGroup.components) {
@@ -446,8 +446,8 @@ foreach($componentGroup in $component_groups) {
     }
 }
 Get-ChildItem $installDir
-Get-ChildItem $installDir\5.15.2\
-Write-Host "Qt 5.14.2 and Qt 5.15.2 LTS installed" -ForegroundColor Green
+Get-ChildItem $installDir\5.14.2\
+Write-Host "Qt 5.14.2 installed" -ForegroundColor Green
 return
 
 # install components
