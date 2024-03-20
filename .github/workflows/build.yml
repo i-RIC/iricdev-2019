@@ -927,6 +927,7 @@ jobs:
 
           # create headers dictionary
           $h = @{"Authorization" = "token ${{secrets.GITHUB_TOKEN}}"}
+          $h["Content-type"] = "application/json"
           $releases_url = "${{env.releases_url}}"
           # create release
           # POST /repos/{owner}/{repo}/releases
@@ -962,7 +963,7 @@ jobs:
           # see https://docs.github.com/ja/rest/reference/repos#update-a-release
           #
           $release_id = ($release.Content | ConvertFrom-Json).id
-          $h.Remove("Content-type")
+          $h["Content-type"] = "application/json"
           $update = @{ "draft" = $false }
           $update_json = $update | ConvertTo-Json
           $release = Invoke-WebRequest -Uri "$releases_url/$release_id" -Headers $h -Method PATCH -Body $update_json
