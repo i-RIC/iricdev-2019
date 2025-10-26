@@ -7,7 +7,7 @@
   <PropertyGroup>
     <!-- hdf5 doesn't build correctly using ninja -->
     <!-- <GENERATOR_NO_QUOTES>$([System.String]::Copy($(GENERATOR)).Replace('"','') )</GENERATOR_NO_QUOTES> -->
-    <HDF5_GENERATOR_NO_QUOTES>Visual Studio 16 2019</HDF5_GENERATOR_NO_QUOTES>
+    <HDF5_GENERATOR_NO_QUOTES>Visual Studio 17 2022</HDF5_GENERATOR_NO_QUOTES>
   </PropertyGroup>
 
   <Target Name="hdf5-clean">
